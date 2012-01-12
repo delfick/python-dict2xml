@@ -7,10 +7,7 @@ class Node(object):
         self.data = data
         self.type = self.determine_type()
         
-    def serialize(self, indenter, template=None):
-        if not template:
-            template = "%(start)s%(value)s%(content)s%(end)s"
-        
+    def serialize(self, indenter):
         wrap = self.wrap
         content = ""
         start, end = "", ""
@@ -21,20 +18,20 @@ class Node(object):
         
         if children:
             if self.type != "iterable":
-                content = indenter((c.serialize(indenter, template) for c in children), wrap)
+                content = indenter((c.serialize(indenter) for c in children), wrap)
             else:
                 result = []
                 for c in children:
-                    content = c.serialize(indenter, template)
+                    content = c.serialize(indenter)
                     if c.type == 'unicode':
                         result.append(content)
                     else:
                         content = indenter([content], True)
-                        result.append(template % dict(start=start, value=value, content=content, end=end))
+                        result.append(''.join((start, content, end)))
                         
                 return indenter(result, False)
                 
-        return template % dict(start=start, value=value, content=content, end=end)
+        return ''.join((start, value, content, end))
     
     def determine_type(self):
         data = self.data
