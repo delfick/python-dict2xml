@@ -20,7 +20,7 @@ class Node(object):
         
         Which one it is depends on the implementation of self.convert
     """
-    def __init__(self, wrap, tag, data=None):
+    def __init__(self, wrap, tag="", data=None):
         self.tag = tag
         self.wrap = wrap
         self.data = data
@@ -169,7 +169,7 @@ class Converter(object):
     def build(self, data):
         """Create a Node tree from the data and return it as a serialized xml string"""
         indenter = self._make_indenter()
-        return Node(self.wrap, "", data).serialize(indenter)
+        return Node(wrap=self.wrap, data=data).serialize(indenter)
 
 ########################
 ###   CONVENIENCE
