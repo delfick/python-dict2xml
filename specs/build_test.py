@@ -57,6 +57,6 @@ describe "Build":
             self.compare(self.data, expected, indent=None, newlines=False)
         
         it "works on a massive, complex dictionary":
-            from test_examples.python_dict import data
-            from test_examples.xml_result import result
+            from examples.python_dict import data
+            from examples.xml_result import result
             self.compare(data, result, indent='  ', newlines=True)
