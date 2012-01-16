@@ -20,7 +20,7 @@ class Node(object):
         
         Which one it is depends on the implementation of self.convert
     """
-    def __init__(self, wrap, tag="", data=None):
+    def __init__(self, wrap="", tag="", data=None):
         self.tag = tag
         self.wrap = wrap
         self.data = data
