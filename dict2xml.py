@@ -1,6 +1,25 @@
 import collections
 
+########################
+###   NODE
+########################
+
 class Node(object):
+    """
+        Represents each tag in the tree
+        
+        Each node has _either_ a single value or one or more children
+        If it has a value:
+            The serialized result is <%(tag)s>%(value)s</%(tag)s>
+        
+        If it has children:
+            The serialized result is 
+                <%(wrap)s>
+                    %(children)s
+                </%(wrap)s>
+        
+        Which one it is depends on the implementation of self.convert
+    """
     def __init__(self, wrap, tag, data=None):
         self.tag = tag
         self.wrap = wrap
@@ -8,43 +27,70 @@ class Node(object):
         self.type = self.determine_type()
         
     def serialize(self, indenter):
+        """Returns the Node serialized as an xml string"""
+        # Determine the start and end of this node
         wrap = self.wrap
-        content = ""
-        start, end = "", ""
+        end, start = "", ""
+        if wrap:
+            end = "</%s>" % wrap
+            start = "<%s>" % wrap
+        
+        # Convert the data attached in this node into a value and children
         value, children = self.convert()
         
-        if wrap:
-            start, end = "<%s>" % wrap, "</%s>" % wrap
-        
+        # Determine the content of the node (essentially the children as a string value)
+        content = ""
         if children:
             if self.type != "iterable":
+                # Non-iterable wraps all it's children in the same tag
                 content = indenter((c.serialize(indenter) for c in children), wrap)
             else:
+                # Iterables repeat the wrap for each child
                 result = []
                 for c in children:
                     content = c.serialize(indenter)
-                    if c.type == 'unicode':
+                    if c.type == 'flat':
+                        # Child with value, it already is surrounded by the tag
                         result.append(content)
                     else:
+                        # Child with children of it's own, they need to be wrapped by start and end
                         content = indenter([content], True)
                         result.append(''.join((start, content, end)))
-                        
-                return indenter(result, False)
                 
+                # We already have what we want, return the indented result
+                return indenter(result, False)
+            
+        # If here, either:
+        #  * Have a value
+        #  * Or this node is not an iterable
         return ''.join((start, value, content, end))
     
     def determine_type(self):
+        """
+            Return the type of the data on this node as an identifying string
+            
+            * Iterable : Supports "for item in data"
+            * Mapping : Supports "for key in data: value = data[key]"
+            * flat : A string or something that isn't iterable or a mapping
+        """
         data = self.data
         if type(data) in (str, unicode):
-            return 'unicode'
+            return 'flat'
         elif isinstance(data, collections.Mapping):
             return 'mapping'
         elif isinstance(data, collections.Iterable):
             return 'iterable'
         else:
-            return 'unicode'
+            return 'flat'
         
     def convert(self):
+        """
+            Convert data on this node into a (value, children) tuple depending on the type of the data
+            If the type is :
+                * flat : Use self.tag to surround the value. <tag>value</tag>
+                * mapping : Return a list of tags where the key for each child is the wrap for that node
+                * iterable : Return a list of Nodes where self.wrap is the tag for that node
+        """
         val = ""
         typ = self.type
         data = self.data
@@ -65,39 +111,70 @@ class Node(object):
                 val = "<%s>%s</%s>" % (self.tag, val, self.tag)
         
         return val, children
+
+########################
+###   CONVERTER
+########################
         
 class Converter(object):
+    """Logic for creating a Node tree and serialising that tree into a string"""
     def __init__(self, wrap=None, indent='  ', newlines=True):
+        """
+            wrap: The tag that the everything else will be contained within
+            indent: The string that is multiplied at the start of each new line, to represent each level of nesting
+            newlines: A boolean specifying whether we want each tag on a new line.
+            
+            Note that indent only works if newlines is True
+        """
         self.wrap = wrap
-        self.indenter = self.make_indenter(indent, newlines)
+        self.indent = indent
+        self.newlines = newlines
     
-    def eachline(self, nodes):
-        for node in nodes:
-            for line in node.split('\n'):
-                yield line
-    
-    def make_indenter(self, indent, newlines):
+    def _make_indenter(self):
+        """Returns a function that given a list of strings, will return that list as a single, indented, string"""
+        indent = self.indent
+        newlines = self.newlines
+        
         if not newlines:
+            # No newlines, don't care about indentation
             ret = lambda nodes, wrapped: "".join(nodes)
         else:
             if not indent:
                 indent = ""
                 
+            def eachline(nodes):
+                """Yield each line in each node"""
+                for node in nodes:
+                    for line in node.split('\n'):
+                        yield line
+                
             def ret(nodes, wrapped):
+                """
+                    Indent nodes depending on value of wrapped and indent
+                    If not wrapped, then don't indent
+                    Otherwise,
+                        Seperate each child by a newline
+                        and indent each line in the child by one indent unit
+                """
                 if wrapped:
                     seperator = "\n%s" % indent
                     surrounding = "\n%s%%s\n" % indent
                 else:
                     seperator = "\n"
                     surrounding = "%s"
-                return surrounding % seperator.join(self.eachline(nodes))
+                return surrounding % seperator.join(eachline(nodes))
         
         return ret
-            
+    
     def build(self, data):
-        return Node(self.wrap, "", data).serialize(self.indenter)
+        """Create a Node tree from the data and return it as a serialized xml string"""
+        indenter = self._make_indenter()
+        return Node(self.wrap, "", data).serialize(indenter)
 
-def dict2xml(data, **kwargs):
-    """ Return an XML string of a Python dict object """
-    converter = Converter(wrap='all', **kwargs)
-    return converter.build(data)
+########################
+###   CONVENIENCE
+########################
+
+def dict2xml(data, *args, **kwargs):
+    """Return an XML string of a Python dict object."""
+    return Converter(*args, **kwargs).build(data)
