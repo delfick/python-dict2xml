@@ -97,7 +97,7 @@ class Converter(object):
     def build(self, data):
         return Node(self.wrap, "", data).serialize(self.indenter)
 
-def dict2xml(data, **kwargs)
+def dict2xml(data, **kwargs):
     """ Return an XML string of a Python dict object """
     converter = Converter(wrap='all', **kwargs)
     return converter.build(data)
