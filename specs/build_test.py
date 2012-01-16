@@ -1,7 +1,8 @@
 # coding: spec
 
-from dict2xml import Converter
+from dict2xml import Converter, dict2xml
 from textwrap import dedent
+import fudge
 
 describe "Build":
 
@@ -9,7 +10,21 @@ describe "Build":
         converter = Converter(wrap='all', **kwargs)
         made = converter.build(data)
         result.strip() |should| equal_to(made)
-        
+    
+    describe "Convenience Function":
+        @fudge.patch("dict2xml.Converter")
+        it "Creates a Converter with *args and **kwargs and calls build on it with provided data", fakeConverter:
+            data = fudge.Fake("data")
+            serialized = fudge.Fake("serialized")
+            (fakeConverter.expects_call()
+                .with_args(1, 2, 3, a=5, b=8)
+                .returns_fake()
+                    .expects('build')
+                        .with_args(data).returns(serialized)
+                )
+            
+            dict2xml(data, 1, 2, 3, a=5, b=8) |should| be(serialized)
+            
     describe "Just Working":
         before_each:
             self.data = {'a' : [1, 2, 3], 'b' : {'c' : 'd', 'e' : {'f':'g'}}, 'd' : 1}

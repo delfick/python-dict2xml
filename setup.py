@@ -16,6 +16,7 @@ setup(
               'https://bitbucket.org/delfick/nose-of-yeti/src'
             , 'https://delfick@github.com/delfick/pinocchio.git'
             , 'should-dsl'
+            , 'fudge'
             ]
         }
     )
