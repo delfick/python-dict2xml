@@ -7,7 +7,19 @@ example
 =======
 
     from dict2xml import dict2xml as xmlify
-    print xmlify({'a' : 1, 'b' : [2, 3], 'c' : {'d' : [{'p' : 9}, {'o' : 10}], 'e': 7}}, wrap="all", indent="  ")
+    data = {
+        'a' : 1
+      , 'b' : [2, 3]
+      , 'c' : {
+          'd' : [
+              {'p' : 9}
+            , {'o' : 10}
+            ]
+          , 'e': 7
+          }
+      }
+      
+    print xmlify(data, wrap="all", indent="  ")
 
 Output
 ------
