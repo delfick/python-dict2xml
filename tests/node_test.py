@@ -16,6 +16,11 @@ describe "Node":
         for d in ["", "asdf", u'', u'asdf', 0, 1, False, True]:
             self.assertEqual(Node(data=d).type, "flat")
 
+    describe "Handling entities":
+        it "will change string data to take entities into account":
+            node = Node(data="<2&a>")
+            self.assertEqual(node.data, "&lt;2&amp;a&gt;")
+
     describe "Determining type":
 
         @nottest

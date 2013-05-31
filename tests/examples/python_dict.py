@@ -93,4 +93,6 @@ data = {
       , "taglib-location": "/WEB-INF/tlds/cofax.tld"
       }
     }
+    , "lessthan" : "<"
+    , "entitylist" : [{'ampersand':"&"}, {'mix':'>p<'}]
   }

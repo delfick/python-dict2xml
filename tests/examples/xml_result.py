@@ -1,5 +1,12 @@
 result = \
 """<all>
+  <entitylist>
+    <ampersand>&amp;</ampersand>
+  </entitylist>
+  <entitylist>
+    <mix>&gt;p&lt;</mix>
+  </entitylist>
+  <lessthan>&lt;</lessthan>
   <web-app>
     <servlet>
       <init-param>

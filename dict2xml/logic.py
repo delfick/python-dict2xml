@@ -21,11 +21,19 @@ class Node(object):
         Which one it is depends on the implementation of self.convert
     """
 
+    # A mapping of characters to treat as escapable entities and their replacements
+    entities = [('&', '&amp;'), ('<', '&lt;'), ('>', '&gt;')]
+
     def __init__(self, wrap="", tag="", data=None):
         self.tag = tag
         self.wrap = wrap
         self.data = data
         self.type = self.determine_type()
+
+        if self.type == 'flat' and isinstance(self.data, basestring):
+            # Make sure we deal with entities
+            for entity, replacement in self.entities:
+                self.data = self.data.replace(entity, replacement)
 
     def serialize(self, indenter):
         """Returns the Node serialized as an xml string"""
