@@ -77,8 +77,8 @@ result = \
         <logLocation>/usr/local/tomcat/logs/CofaxTools.log</logLocation>
         <logMaxSize></logMaxSize>
         <lookInContext>1</lookInContext>
-        <removePageCache>/content/admin/remove?cache=pages&id=</removePageCache>
-        <removeTemplateCache>/content/admin/remove?cache=templates&id=</removeTemplateCache>
+        <removePageCache>/content/admin/remove?cache=pages&amp;id=</removePageCache>
+        <removeTemplateCache>/content/admin/remove?cache=templates&amp;id=</removeTemplateCache>
         <templatePath>toolstemplates/</templatePath>
       </init-param>
       <servlet-class>org.cofax.cms.CofaxToolsServlet</servlet-class>

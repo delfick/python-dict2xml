@@ -1,2 +1,3 @@
-#~/bin/sh
-nosetests --with-spec --spec-color --with-noy --pdb
+#!/bin/bash
+nosetests  --with-noy --noy-default-kls=unittest.TestCase $@
+

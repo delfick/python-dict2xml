@@ -3,6 +3,22 @@ dict2xml
 
 Super Simple utility to convert a python dictionary into an xml string
 
+Installation
+============
+
+Make youself a virtualenv (you're using those right?) and do the following::
+
+  $ pip install .
+
+Or if you want to develop on dict2xml, recommended commands are::
+
+  $ pip install -e .
+  $ pip install dict2xml[test]
+ 
+Or if you don't want to install from source::
+
+  $ pip install dict2xml
+
 example
 =======
 

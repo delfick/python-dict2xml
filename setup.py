@@ -1,22 +1,22 @@
-#!/usr/bin/env python
-#coding: utf-8
+from setuptools import setup
 
-from distutils.core import setup
-
+# Setup the project
 setup(
       name = "dict2xml"
+    , version = '1.1'
+    , packages = ['dict2xml']
+
+    , extras_require =
+      { 'tests' :
+        [ 'fudge'
+        , 'noseOfYeti'
+        ]
+      }
+
+    # metadata
     , author = "Stephen Moore"
     , author_email = "stephen@delfick.com"
-    , version = "1.0"
-    , license = "WTFPL"
     , description = "small script to output xml as a string from a python dictionary"
-    , py_modules = ["dict2xml"]
-    , extras_require = {
-          'tests' : [
-              'https://bitbucket.org/delfick/nose-of-yeti/src'
-            , 'https://delfick@github.com/delfick/pinocchio.git'
-            , 'should-dsl'
-            , 'fudge'
-            ]
-        }
+    , license = "WTFPL"
     )
+
