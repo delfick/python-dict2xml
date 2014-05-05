@@ -3,15 +3,20 @@ from setuptools import setup
 # Setup the project
 setup(
       name = "dict2xml"
-    , version = '1.1'
+    , version = '1.2'
     , packages = ['dict2xml']
 
     , extras_require =
       { 'tests' :
         [ 'fudge'
-        , 'noseOfYeti'
+        , 'noseOfYeti>=1.5.0'
+        , 'nose'
         ]
       }
+
+    , install_requires =
+      [ "six"
+      ]
 
     # metadata
     , author = "Stephen Moore"

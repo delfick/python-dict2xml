@@ -1,4 +1,5 @@
 import collections
+import six
 
 ########################
 ###   NODE
@@ -30,7 +31,7 @@ class Node(object):
         self.data = data
         self.type = self.determine_type()
 
-        if self.type == 'flat' and isinstance(self.data, basestring):
+        if self.type == 'flat' and isinstance(self.data, six.string_types):
             # Make sure we deal with entities
             for entity, replacement in self.entities:
                 self.data = self.data.replace(entity, replacement)
@@ -83,7 +84,7 @@ class Node(object):
             * flat : A string or something that isn't iterable or a mapping
         """
         data = self.data
-        if type(data) in (str, unicode):
+        if isinstance(data, six.string_types):
             return 'flat'
         elif isinstance(data, collections.Mapping):
             return 'mapping'
@@ -115,7 +116,7 @@ class Node(object):
                 children.append(Node("", self.wrap, item))
 
         else:
-            val = unicode(data)
+            val = str(data)
             if self.tag:
                 val = "<%s>%s</%s>" % (self.tag, val, self.tag)
 
