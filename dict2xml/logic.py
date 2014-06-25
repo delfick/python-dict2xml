@@ -116,7 +116,7 @@ class Node(object):
                 children.append(Node("", self.wrap, item))
 
         else:
-            val = str(data)
+            val = unicode(data)
             if self.tag:
                 val = "<%s>%s</%s>" % (self.tag, val, self.tag)
 
