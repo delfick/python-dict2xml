@@ -86,6 +86,8 @@ class Node(object):
         data = self.data
         if isinstance(data, six.string_types):
             return 'flat'
+        elif isinstance(data, six.text_type):
+            return 'flat'
         elif isinstance(data, collections.Mapping):
             return 'mapping'
         elif isinstance(data, collections.Iterable):
