@@ -84,9 +84,7 @@ class Node(object):
             * flat : A string or something that isn't iterable or a mapping
         """
         data = self.data
-        if isinstance(data, six.string_types):
-            return 'flat'
-        elif isinstance(data, six.text_type):
+        if isinstance(data, six.string_types) or isinstance(data, six.text_type):
             return 'flat'
         elif isinstance(data, collections.Mapping):
             return 'mapping'
