@@ -1,6 +1,7 @@
 result = \
 """<all>
   <_3badtagstart>x</_3badtagstart>
+  <_Xml_with_other_case_is_an_invalid_prefix>x</_Xml_with_other_case_is_an_invalid_prefix>
   <entitylist>
     <ampersand>&amp;</ampersand>
   </entitylist>
@@ -104,5 +105,6 @@ result = \
       <taglib-uri>cofax.tld</taglib-uri>
     </taglib>
   </web-app>
+  <_xml_is_an_invalid_prefix>x</_xml_is_an_invalid_prefix>
 </all>
 """

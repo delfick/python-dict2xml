@@ -96,4 +96,6 @@ data = {
     , "lessthan" : "<"
     , "entitylist" : [{'ampersand':"&"}, {'mix':'>p<'}]
     , "3badtagstart" : "x"
+    , "xml_is_an_invalid_prefix" : "x"
+    , "Xml_with_other_case_is_an_invalid_prefix" : "x"
   }

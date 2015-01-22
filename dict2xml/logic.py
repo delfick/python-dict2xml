@@ -145,6 +145,8 @@ class Node(object):
             :ref: http://www.w3.org/TR/REC-xml/#NT-NameChar
         """
         if wrap and isinstance(wrap, six.string_types):
+            if wrap.lower().startswith('xml'):
+                wrap = '_' + wrap
             return ''.join(
                 ['_' if not NameStartChar.match(wrap) else ''] + \
                 ['_' if not (NameStartChar.match(c) or NameChar.match(c)) else c
