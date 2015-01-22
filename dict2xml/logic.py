@@ -1,5 +1,14 @@
 import collections
+import re
 import six
+
+
+NameStartChar = re.compile(
+    u"(:|[A-Z]|_|[a-z]|[\xC0-\xD6]|[\xD8-\xF6]|[\xF8-\u02FF]|[\u0370-\u037D]|[\u037F-\u1FFF]|[\u200C-\u200D]|[\u2070-\u218F]|[\u2C00-\u2FEF]|[\u3001-\uD7FF]|[\uF900-\uFDCF]|[\uFDF0-\uFFFD]|[\U00010000-\U000EFFFF])",
+    re.UNICODE)
+NameChar = re.compile(
+    u"(\-|\.|[0-9]|\xB7|[\u0300-\u036F]|[\u203F-\u2040])",
+    re.UNICODE)
 
 ########################
 ###   NODE
@@ -26,8 +35,8 @@ class Node(object):
     entities = [('&', '&amp;'), ('<', '&lt;'), ('>', '&gt;')]
 
     def __init__(self, wrap="", tag="", data=None):
-        self.tag = tag
-        self.wrap = wrap
+        self.tag = self.sanitize_element(tag)
+        self.wrap = self.sanitize_element(wrap)
         self.data = data
         self.type = self.determine_type()
 
@@ -121,6 +130,29 @@ class Node(object):
                 val = "<%s>%s</%s>" % (self.tag, val, self.tag)
 
         return val, children
+
+    @staticmethod
+    def sanitize_element(wrap):
+        """
+            Convert `wrap` into a valid tag name applying the XML Naming Rules.
+
+                * Names can contain letters, numbers, and other characters
+                * Names cannot start with a number or punctuation character
+                * Names cannot start with the letters xml (or XML, or Xml, etc)
+                * Names cannot contain spaces
+                * Any name can be used, no words are reserved.
+
+            :ref: http://www.w3.org/TR/REC-xml/#NT-NameChar
+        """
+        if wrap and isinstance(wrap, six.string_types):
+            if wrap.lower().startswith('xml'):
+                wrap = '_' + wrap
+            return ''.join(
+                ['_' if not NameStartChar.match(wrap) else ''] + \
+                ['_' if not (NameStartChar.match(c) or NameChar.match(c)) else c
+                 for c in wrap])
+        else:
+            return wrap
 
 ########################
 ###   CONVERTER
