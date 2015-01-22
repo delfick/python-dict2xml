@@ -1,5 +1,6 @@
 result = \
 """<all>
+  <_3badtagstart>x</_3badtagstart>
   <entitylist>
     <ampersand>&amp;</ampersand>
   </entitylist>

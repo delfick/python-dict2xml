@@ -10,6 +10,7 @@ import fudge
 describe "Build":
 
     def compare(self, data, result, **kwargs):
+        self.assertEqual.__self__.maxDiff = None
         converter = Converter(wrap='all', **kwargs)
         made = converter.build(data)
         self.assertEqual(result.strip(), made)

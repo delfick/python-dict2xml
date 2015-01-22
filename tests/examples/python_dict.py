@@ -95,4 +95,5 @@ data = {
     }
     , "lessthan" : "<"
     , "entitylist" : [{'ampersand':"&"}, {'mix':'>p<'}]
+    , "3badtagstart" : "x"
   }
