@@ -34,11 +34,12 @@ class Node(object):
     # A mapping of characters to treat as escapable entities and their replacements
     entities = [('&', '&amp;'), ('<', '&lt;'), ('>', '&gt;')]
 
-    def __init__(self, wrap="", tag="", data=None):
+    def __init__(self, wrap="", tag="", data=None, iterables_repeat_wrap=True):
         self.tag = self.sanitize_element(tag)
         self.wrap = self.sanitize_element(wrap)
         self.data = data
         self.type = self.determine_type()
+        self.iterables_repeat_wrap = iterables_repeat_wrap
 
         if self.type == 'flat' and isinstance(self.data, six.string_types):
             # Make sure we deal with entities
@@ -64,20 +65,26 @@ class Node(object):
                 # Non-iterable wraps all it's children in the same tag
                 content = indenter((c.serialize(indenter) for c in children), wrap)
             else:
-                # Iterables repeat the wrap for each child
-                result = []
-                for c in children:
-                    content = c.serialize(indenter)
-                    if c.type == 'flat':
-                        # Child with value, it already is surrounded by the tag
-                        result.append(content)
-                    else:
-                        # Child with children of it's own, they need to be wrapped by start and end
-                        content = indenter([content], True)
-                        result.append(''.join((start, content, end)))
+                if self.iterables_repeat_wrap:
+                    # Iterables repeat the wrap for each child
+                    result = []
+                    for c in children:
+                        content = c.serialize(indenter)
+                        if c.type == 'flat':
+                            # Child with value, it already is surrounded by the tag
+                            result.append(content)
+                        else:
+                            # Child with children of it's own, they need to be wrapped by start and end
+                            content = indenter([content], True)
+                            result.append(''.join((start, content, end)))
 
-                # We already have what we want, return the indented result
-                return indenter(result, False)
+                    # We already have what we want, return the indented result
+                    return indenter(result, False)
+                else:
+                    result = []
+                    for c in children:
+                        result.append(c.serialize(indenter))
+                    return ''.join([start, indenter(result, True), end])
 
         # If here, either:
         #  * Have a value
@@ -118,11 +125,11 @@ class Node(object):
         if typ == 'mapping':
             for key in sorted(data):
                 item = data[key]
-                children.append(Node(key, "", item))
+                children.append(Node(key, "", item, iterables_repeat_wrap=self.iterables_repeat_wrap))
 
         elif typ == 'iterable':
             for item in data:
-                children.append(Node("", self.wrap, item))
+                children.append(Node("", self.wrap, item, iterables_repeat_wrap=self.iterables_repeat_wrap))
 
         else:
             val = six.text_type(data)
@@ -208,8 +215,8 @@ class Converter(object):
 
         return ret
 
-    def build(self, data):
+    def build(self, data, iterables_repeat_wrap=True):
         """Create a Node tree from the data and return it as a serialized xml string"""
         indenter = self._make_indenter()
-        return Node(wrap=self.wrap, data=data).serialize(indenter)
+        return Node(wrap=self.wrap, data=data, iterables_repeat_wrap=iterables_repeat_wrap).serialize(indenter)
 

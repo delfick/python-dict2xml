@@ -24,7 +24,7 @@ describe "Converter":
 
             # Model movement of data through a Node
             (fakeNode.expects_call()
-                .with_args(wrap=wrap, data=data)
+                .with_args(wrap=wrap, data=data, iterables_repeat_wrap=True)
                 .returns_fake()
                     .expects("serialize")
                         .with_args(indenter).returns(serialized)
@@ -37,6 +37,36 @@ describe "Converter":
             with patched_context(converter, "_make_indenter", fakeMakeIndenter):
                 # Test the data flow
                 self.assertEqual(converter.build(data), serialized)
+
+        it "doesn't repeat the wrap if iterables_repeat_wrap is False":
+            example = {
+                  'array':
+                  [ { 'item':
+                      { 'string1': 'string'
+                      , 'string2': 'string'
+                      }
+                    }
+                  , { 'item':
+                      { 'string1': 'other string'
+                      , 'string2': 'other string'
+                      }
+                    }
+                  ]
+                }
+
+            result = Converter("").build(example, iterables_repeat_wrap=False)
+            self.assertEqual(result, dedent("""
+                <array>
+                  <item>
+                    <string1>string</string1>
+                    <string2>string</string2>
+                  </item>
+                  <item>
+                    <string1>other string</string1>
+                    <string2>other string</string2>
+                  </item>
+                </array>
+            """).strip())
 
     describe "Making indentation function":
 

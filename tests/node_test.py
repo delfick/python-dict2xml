@@ -73,29 +73,31 @@ describe "Node":
             n1 = fudge.Fake("n1")
             n2 = fudge.Fake("n2")
             n3 = fudge.Fake("n3")
+            irw = fudge.Fake("irw")
             data = dict(a=1, b=2, c=3)
             (fakeNode.expects_call()
-                .with_args('a', "", 1).returns(n1)
-                .next_call().with_args("b", "", 2).returns(n2)
-                .next_call().with_args("c", "", 3).returns(n3)
+                .with_args('a', "", 1, iterables_repeat_wrap=irw).returns(n1)
+                .next_call().with_args("b", "", 2, iterables_repeat_wrap=irw).returns(n2)
+                .next_call().with_args("c", "", 3, iterables_repeat_wrap=irw).returns(n3)
                 )
 
-            self.assertEqual(Node(data=data).convert(), ("", [n1, n2, n3]))
+            self.assertEqual(Node(data=data, iterables_repeat_wrap=irw).convert(), ("", [n1, n2, n3]))
 
         @fudge.patch("dict2xml.logic.Node")
         it "returns list of Nodes with wrap as tag and item as data if type is iterable", fakeNode:
             n1 = fudge.Fake("n1")
             n2 = fudge.Fake("n2")
             n3 = fudge.Fake("n3")
+            irw = fudge.Fake("irw")
             wrap = fudge.Fake("wrap")
             data = [1, 2, 3]
             (fakeNode.expects_call()
-                .with_args('', wrap, 1).returns(n1)
-                .next_call().with_args('', wrap, 2).returns(n2)
-                .next_call().with_args('', wrap, 3).returns(n3)
+                .with_args('', wrap, 1, iterables_repeat_wrap=irw).returns(n1)
+                .next_call().with_args('', wrap, 2, iterables_repeat_wrap=irw).returns(n2)
+                .next_call().with_args('', wrap, 3, iterables_repeat_wrap=irw).returns(n3)
                 )
 
-            self.assertEqual(Node(wrap=wrap, data=data).convert(), ("", [n1, n2, n3]))
+            self.assertEqual(Node(wrap=wrap, data=data, iterables_repeat_wrap=irw).convert(), ("", [n1, n2, n3]))
 
         it "returns data enclosed in tags made from self.tag if not iterable or mapping":
             tag = "thing"
