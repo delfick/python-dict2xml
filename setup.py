@@ -3,7 +3,7 @@ from setuptools import setup
 # Setup the project
 setup(
       name = "dict2xml"
-    , version = '1.4'
+    , version = '1.4.1'
     , packages = ['dict2xml']
 
     , extras_require =
