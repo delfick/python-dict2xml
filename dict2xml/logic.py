@@ -123,7 +123,11 @@ class Node(object):
         children = []
 
         if typ == 'mapping':
-            for key in sorted(data):
+            sorted_data = data
+            if not isinstance(data, collections.OrderedDict):
+                sorted_data = sorted(data)
+
+            for key in sorted_data:
                 item = data[key]
                 children.append(Node(key, "", item, iterables_repeat_wrap=self.iterables_repeat_wrap))
 
