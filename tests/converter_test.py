@@ -5,11 +5,12 @@ from dict2xml import Converter
 from noseOfYeti.tokeniser.support import noy_sup_setUp
 from fudge import patched_context
 from nose.tools import nottest
+from unittest import TestCase
 from textwrap import dedent
 import unittest
 import fudge
 
-describe "Converter":
+describe TestCase, "Converter":
     describe "Building":
         @fudge.patch("dict2xml.logic.Node")
         it "creates an indenter, a node, and then calls serialize on the node with the indenter", fakeNode:

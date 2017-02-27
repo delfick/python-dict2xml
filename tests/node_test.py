@@ -5,11 +5,12 @@ from dict2xml import Node, Converter
 from noseOfYeti.tokeniser.support import noy_sup_setUp
 from fudge import patched_context
 from nose.tools import nottest
+from unittest import TestCase
 import collections
 import unittest
 import fudge
 
-describe "Node":
+describe TestCase, "Node":
     it "determines type at instantiation":
         self.assertEqual(Node(data={}).type, "mapping")
         self.assertEqual(Node(data=[]).type, "iterable")
