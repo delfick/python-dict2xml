@@ -6,14 +6,14 @@ Super Simple utility to convert a python dictionary into an xml string
 Installation
 ============
 
-Make youself a virtualenv (you're using those right?) and do the following::
+Make youself a virtualenv and do the following::
 
   $ pip install .
 
 Or if you want to develop on dict2xml, recommended commands are::
 
   $ pip install -e .
-  $ pip install dict2xml[test]
+  $ pip install -e ".[tests]"
 
 Or if you don't want to install from source::
 
@@ -90,8 +90,15 @@ Limitations
 * Currently no explicit way to hook into how to cope with your custom data
 * Currently no way to insert an xml declaration line
 
-license
-=======
+Changelog
+=========
 
-WTFPL
+1.6
+    * No code changes
+    * changed the licence to MIT
+    * Added more metadata to pypi
+    * Enabled travis ci
+    * Updated the tests slightly
 
+1.5
+    No changelog was kept before this point.
