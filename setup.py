@@ -3,7 +3,7 @@ from setuptools import setup
 # Setup the project
 setup(
       name = "dict2xml"
-    , version = '1.6'
+    , version = '1.6.1'
     , packages = ['dict2xml']
 
     , extras_require =
@@ -30,9 +30,11 @@ setup(
       ]
 
     # metadata
+    , url = "http://github.com/delfick/python-dict2xml"
     , author = "Stephen Moore"
     , author_email = "stephen@delfick.com"
     , description = "small script to output xml as a string from a python dictionary"
+    , long_description = open("README.rst").read()
     , license = "MIT"
     )
 

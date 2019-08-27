@@ -89,6 +89,9 @@ Limitations
 Changelog
 ---------
 
+1.6.1
+    * Include readme and LICENSE in the package
+
 1.6
     * No code changes
     * changed the licence to MIT
