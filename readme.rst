@@ -4,7 +4,7 @@ dict2xml
 Super Simple utility to convert a python dictionary into an xml string
 
 Installation
-============
+------------
 
 Make youself a virtualenv and do the following::
 
@@ -20,7 +20,7 @@ Or if you don't want to install from source::
   $ pip install dict2xml
 
 example
-=======
+-------
 
 .. code-block:: python
 
@@ -60,38 +60,34 @@ Output
   </all>
 
 methods
-=======
+-------
 
-dict2xml.dict2xml(data, *args, **kwargs)
-----------------------------------------
+``dict2xml.dict2xml(data, *args, **kwargs)``
+    Equivalent to:
 
-Equivalent to::
+    .. code-block:: python
 
-  dict2xml.Converter(*args, **kwargs).build(data)
+        dict2xml.Converter(*args, **kwargs).build(data)
 
-dict2xml.Converter(wrap="", indent="  ", newlines=True)
--------------------------------------------------------
+``dict2xml.Converter(wrap="", indent="  ", newlines=True)``
+    Knows how to convert a dictionary into an xml string
 
-Knows how to convert a dictionary into an xml string
+    * wrap: Wraps the entire tree in this tag
+    * indent: Amount to prefix each line for each level of nesting
+    * newlines: Whether or not to use newlines
 
-* wrap: Wraps the entire tree in this tag
-* indent: Amount to prefix each line for each level of nesting
-* newlines: Whether or not to use newlines
-
-dict2xml.Converter.build(data)
-------------------------------
-
-Instance method on Converter that takes in the data and creates the xml string
+``dict2xml.Converter.build(data)``
+    Instance method on Converter that takes in the data and creates the xml string
 
 Limitations
-===========
+-----------
 
 * No attributes on elements
 * Currently no explicit way to hook into how to cope with your custom data
 * Currently no way to insert an xml declaration line
 
 Changelog
-=========
+---------
 
 1.6
     * No code changes
@@ -101,4 +97,4 @@ Changelog
     * Updated the tests slightly
 
 1.5
-    No changelog was kept before this point.
+    * No changelog was kept before this point.
