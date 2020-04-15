@@ -2,7 +2,6 @@
 
 from dict2xml import Converter, dict2xml
 
-from noseOfYeti.tokeniser.support import noy_sup_setUp
 from unittest import TestCase
 from textwrap import dedent
 import unittest

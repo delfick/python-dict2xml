@@ -2,7 +2,6 @@
 
 from dict2xml import Converter
 
-from noseOfYeti.tokeniser.support import noy_sup_setUp
 from fudge import patched_context
 from nose.tools import nottest
 from unittest import TestCase

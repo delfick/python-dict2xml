@@ -2,11 +2,11 @@
 
 from dict2xml import Node, Converter
 
-from noseOfYeti.tokeniser.support import noy_sup_setUp
 from fudge import patched_context
 from nose.tools import nottest
 from unittest import TestCase
 import collections
+import collections.abc
 import unittest
 import fudge
 
@@ -49,7 +49,7 @@ describe TestCase, "Node":
                 )
 
         it "says anything that is a dict or subclass of collections.Mapping is a mapping":
-            class MappingObject(collections.Mapping):
+            class MappingObject(collections.abc.Mapping):
                 def __len__(self): return 0
                 def __iter__(self): return []
                 def __getitem__(self, key): return key
