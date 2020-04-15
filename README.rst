@@ -24,20 +24,21 @@ example
 
 .. code-block:: python
 
-  from dict2xml import dict2xml as xmlify
-  data = {
-      'a' : 1
-    , 'b' : [2, 3]
-    , 'c' : {
-        'd' : [
-            {'p' : 9}
-          , {'o' : 10}
-          ]
-        , 'e': 7
-        }
-    }
+  from dict2xml import dict2xml
 
-  print xmlify(data, wrap="all", indent="  ")
+  data = {
+    'a': 1,
+    'b': [2, 3],
+    'c': {
+      'd': [
+        {'p': 9},
+        {'o': 10}
+      ],
+      'e': 7
+    }
+  }
+
+  print dict2xml(data, wrap="all", indent="  ")
 
 Output
 ------

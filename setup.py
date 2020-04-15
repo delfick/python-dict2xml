@@ -30,7 +30,7 @@ setup(
     , url = "http://github.com/delfick/python-dict2xml"
     , author = "Stephen Moore"
     , author_email = "stephen@delfick.com"
-    , description = "small script to output xml as a string from a python dictionary"
+    , description = "Small utility to convert a python dictionary into an XML string"
     , long_description = open("README.rst").read()
     , license = "MIT"
     )
