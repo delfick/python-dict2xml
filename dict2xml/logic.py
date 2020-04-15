@@ -1,4 +1,5 @@
 import collections
+import collections.abc
 import re
 import six
 
@@ -102,9 +103,9 @@ class Node(object):
         data = self.data
         if isinstance(data, six.string_types) or isinstance(data, six.text_type):
             return 'flat'
-        elif isinstance(data, collections.Mapping):
+        elif isinstance(data, collections.abc.Mapping):
             return 'mapping'
-        elif isinstance(data, collections.Iterable):
+        elif isinstance(data, collections.abc.Iterable):
             return 'iterable'
         else:
             return 'flat'
