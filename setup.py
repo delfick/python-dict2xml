@@ -1,5 +1,7 @@
 from setuptools import setup
 
+# fmt: off
+
 # Setup the project
 setup(
       name = "dict2xml"
@@ -38,3 +40,4 @@ setup(
     , license = "MIT"
     )
 
+# fmt: on

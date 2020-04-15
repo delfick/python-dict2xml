@@ -6,14 +6,14 @@ import six
 
 NameStartChar = re.compile(
     u"(:|[A-Z]|_|[a-z]|[\xC0-\xD6]|[\xD8-\xF6]|[\xF8-\u02FF]|[\u0370-\u037D]|[\u037F-\u1FFF]|[\u200C-\u200D]|[\u2070-\u218F]|[\u2C00-\u2FEF]|[\u3001-\uD7FF]|[\uF900-\uFDCF]|[\uFDF0-\uFFFD])",
-    re.UNICODE)
-NameChar = re.compile(
-    u"(\-|\.|[0-9]|\xB7|[\u0300-\u036F]|[\u203F-\u2040])",
-    re.UNICODE)
+    re.UNICODE,
+)
+NameChar = re.compile(u"(\-|\.|[0-9]|\xB7|[\u0300-\u036F]|[\u203F-\u2040])", re.UNICODE)
 
 ########################
 ###   NODE
 ########################
+
 
 class Node(object):
     """
@@ -33,7 +33,7 @@ class Node(object):
     """
 
     # A mapping of characters to treat as escapable entities and their replacements
-    entities = [('&', '&amp;'), ('<', '&lt;'), ('>', '&gt;')]
+    entities = [("&", "&amp;"), ("<", "&lt;"), (">", "&gt;")]
 
     def __init__(self, wrap="", tag="", data=None, iterables_repeat_wrap=True):
         self.tag = self.sanitize_element(tag)
@@ -42,7 +42,7 @@ class Node(object):
         self.type = self.determine_type()
         self.iterables_repeat_wrap = iterables_repeat_wrap
 
-        if self.type == 'flat' and isinstance(self.data, six.string_types):
+        if self.type == "flat" and isinstance(self.data, six.string_types):
             # Make sure we deal with entities
             for entity, replacement in self.entities:
                 self.data = self.data.replace(entity, replacement)
@@ -71,13 +71,13 @@ class Node(object):
                     result = []
                     for c in children:
                         content = c.serialize(indenter)
-                        if c.type == 'flat':
+                        if c.type == "flat":
                             # Child with value, it already is surrounded by the tag
                             result.append(content)
                         else:
                             # Child with children of it's own, they need to be wrapped by start and end
                             content = indenter([content], True)
-                            result.append(''.join((start, content, end)))
+                            result.append("".join((start, content, end)))
 
                     # We already have what we want, return the indented result
                     return indenter(result, False)
@@ -85,12 +85,12 @@ class Node(object):
                     result = []
                     for c in children:
                         result.append(c.serialize(indenter))
-                    return ''.join([start, indenter(result, True), end])
+                    return "".join([start, indenter(result, True), end])
 
         # If here, either:
         #  * Have a value
         #  * Or this node is not an iterable
-        return ''.join((start, value, content, end))
+        return "".join((start, value, content, end))
 
     def determine_type(self):
         """
@@ -102,13 +102,13 @@ class Node(object):
         """
         data = self.data
         if isinstance(data, six.string_types) or isinstance(data, six.text_type):
-            return 'flat'
+            return "flat"
         elif isinstance(data, collections.abc.Mapping):
-            return 'mapping'
+            return "mapping"
         elif isinstance(data, collections.abc.Iterable):
-            return 'iterable'
+            return "iterable"
         else:
-            return 'flat'
+            return "flat"
 
     def convert(self):
         """
@@ -123,18 +123,22 @@ class Node(object):
         data = self.data
         children = []
 
-        if typ == 'mapping':
+        if typ == "mapping":
             sorted_data = data
             if not isinstance(data, collections.OrderedDict):
                 sorted_data = sorted(data)
 
             for key in sorted_data:
                 item = data[key]
-                children.append(Node(key, "", item, iterables_repeat_wrap=self.iterables_repeat_wrap))
+                children.append(
+                    Node(key, "", item, iterables_repeat_wrap=self.iterables_repeat_wrap)
+                )
 
-        elif typ == 'iterable':
+        elif typ == "iterable":
             for item in data:
-                children.append(Node("", self.wrap, item, iterables_repeat_wrap=self.iterables_repeat_wrap))
+                children.append(
+                    Node("", self.wrap, item, iterables_repeat_wrap=self.iterables_repeat_wrap)
+                )
 
         else:
             val = six.text_type(data)
@@ -157,22 +161,25 @@ class Node(object):
             :ref: http://www.w3.org/TR/REC-xml/#NT-NameChar
         """
         if wrap and isinstance(wrap, six.string_types):
-            if wrap.lower().startswith('xml'):
-                wrap = '_' + wrap
-            return ''.join(
-                ['_' if not NameStartChar.match(wrap) else ''] + \
-                ['_' if not (NameStartChar.match(c) or NameChar.match(c)) else c
-                 for c in wrap])
+            if wrap.lower().startswith("xml"):
+                wrap = "_" + wrap
+            return "".join(
+                ["_" if not NameStartChar.match(wrap) else ""]
+                + ["_" if not (NameStartChar.match(c) or NameChar.match(c)) else c for c in wrap]
+            )
         else:
             return wrap
+
 
 ########################
 ###   CONVERTER
 ########################
 
+
 class Converter(object):
     """Logic for creating a Node tree and serialising that tree into a string"""
-    def __init__(self, wrap=None, indent='  ', newlines=True):
+
+    def __init__(self, wrap=None, indent="  ", newlines=True):
         """
             wrap: The tag that the everything else will be contained within
             indent: The string that is multiplied at the start of each new line, to represent each level of nesting
@@ -199,7 +206,7 @@ class Converter(object):
             def eachline(nodes):
                 """Yield each line in each node"""
                 for node in nodes:
-                    for line in node.split('\n'):
+                    for line in node.split("\n"):
                         yield line
 
             def ret(nodes, wrapped):
@@ -223,5 +230,6 @@ class Converter(object):
     def build(self, data, iterables_repeat_wrap=True):
         """Create a Node tree from the data and return it as a serialized xml string"""
         indenter = self._make_indenter()
-        return Node(wrap=self.wrap, data=data, iterables_repeat_wrap=iterables_repeat_wrap).serialize(indenter)
-
+        return Node(
+            wrap=self.wrap, data=data, iterables_repeat_wrap=iterables_repeat_wrap
+        ).serialize(indenter)

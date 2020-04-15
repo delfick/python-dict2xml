@@ -1,0 +1,11 @@
+[tool.black]
+line-length = 100
+include = '\.py$'
+exclude = '''
+/(
+     \.git
+   | \.tox
+   | dist
+   | tools
+)/
+'''
