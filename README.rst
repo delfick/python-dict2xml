@@ -90,7 +90,7 @@ Limitations
 Changelog
 ---------
 
-1.7 - TBD
+1.7.0 - 16 April, 2020
     * Use collections.abc to avoid deprecation warning. Thanks @mangin.
     * This library no longer supports Python2 and is only supported for
       Python3.6+. Note that the library should still work in Python3.5 as I

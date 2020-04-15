@@ -5,7 +5,7 @@ from setuptools import setup
 # Setup the project
 setup(
       name = "dict2xml"
-    , version = '1.6.1'
+    , version = '1.7.0'
     , packages = ['dict2xml']
 
     , extras_require =
