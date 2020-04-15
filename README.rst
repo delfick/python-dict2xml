@@ -91,6 +91,9 @@ Changelog
 
 1.7 - TBD
     * Use collections.abc to avoid deprecation warning. Thanks @mangin.
+    * This library no longer supports Python2 and is only supported for
+      Python3.6+. Note that the library should still work in Python3.5 as I
+      have not used f-strings, but the framework I use for the tests is only 3.6+.
 
 1.6.1 - August 27, 2019
     * Include readme and LICENSE in the package

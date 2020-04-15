@@ -3,19 +3,12 @@ language: python
 dist: xenial
 
 python:
-  - "2.7"
-  - "3.4"
-  - "3.5"
   - "3.6"
   - "3.7"
-
-env:
-  global:
-    - CI_SERVER=true
+  - "3.8"
 
 install:
   - pip install pip --upgrade
-  - pip install -e .
   - pip install -e '.[tests]'
 
 script:

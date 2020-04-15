@@ -1,7 +1,6 @@
-import collections
 import collections.abc
+import collections
 import re
-import six
 
 start_ranges = "|".join(
     "[{0}]".format(r)
@@ -55,7 +54,7 @@ class Node(object):
         self.type = self.determine_type()
         self.iterables_repeat_wrap = iterables_repeat_wrap
 
-        if self.type == "flat" and isinstance(self.data, six.string_types):
+        if self.type == "flat" and isinstance(self.data, str):
             # Make sure we deal with entities
             for entity, replacement in self.entities:
                 self.data = self.data.replace(entity, replacement)
@@ -114,7 +113,7 @@ class Node(object):
             * flat : A string or something that isn't iterable or a mapping
         """
         data = self.data
-        if isinstance(data, six.string_types) or isinstance(data, six.text_type):
+        if isinstance(data, str):
             return "flat"
         elif isinstance(data, collections.abc.Mapping):
             return "mapping"
@@ -154,7 +153,7 @@ class Node(object):
                 )
 
         else:
-            val = six.text_type(data)
+            val = str(data)
             if self.tag:
                 val = "<{0}>{1}</{2}>".format(self.tag, val, self.tag)
 
@@ -173,7 +172,7 @@ class Node(object):
 
             :ref: http://www.w3.org/TR/REC-xml/#NT-NameChar
         """
-        if wrap and isinstance(wrap, six.string_types):
+        if wrap and isinstance(wrap, str):
             if wrap.lower().startswith("xml"):
                 wrap = "_" + wrap
             return "".join(
@@ -232,7 +231,7 @@ class Converter(object):
                 """
                 if wrapped:
                     seperator = "\n{0}".format(indent)
-                    surrounding = "\n{0}{{0}}".format(indent)
+                    surrounding = "\n{0}{{0}}\n".format(indent)
                 else:
                     seperator = "\n"
                     surrounding = "{0}"
