@@ -1,13 +1,11 @@
 # coding: spec
 
-from dict2xml import Node, Converter
+from dict2xml import Node
 
-from fudge import patched_context
 from nose.tools import nottest
 from unittest import TestCase
-import collections
 import collections.abc
-import unittest
+import collections
 import fudge
 
 describe TestCase, "Node":

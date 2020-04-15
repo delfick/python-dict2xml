@@ -4,7 +4,6 @@ from dict2xml import Converter, dict2xml
 
 from unittest import TestCase
 from textwrap import dedent
-import unittest
 import fudge
 
 describe TestCase, "Build":

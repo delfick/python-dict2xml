@@ -6,7 +6,6 @@ from fudge import patched_context
 from nose.tools import nottest
 from unittest import TestCase
 from textwrap import dedent
-import unittest
 import fudge
 
 describe TestCase, "Converter":
@@ -70,7 +69,9 @@ describe TestCase, "Converter":
 
         @nottest
         def test_indenter(self, indenter, nodes, wrap, expected):
-            self.assertEqual("%s%s%s" % (wrap, indenter(nodes, wrap), wrap), expected.strip())
+            self.assertEqual(
+                "{0}{1}{2}".format(wrap, indenter(nodes, wrap), wrap), expected.strip()
+            )
 
         before_each:
             self.withIndent = Converter(indent="    ", newlines=True)

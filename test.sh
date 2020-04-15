@@ -1,2 +1,2 @@
 #!/bin/bash
-nosetests  --with-noy  $@
+pytest -q $@

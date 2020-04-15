@@ -3,12 +3,25 @@ import collections.abc
 import re
 import six
 
-
-NameStartChar = re.compile(
-    u"(:|[A-Z]|_|[a-z]|[\xC0-\xD6]|[\xD8-\xF6]|[\xF8-\u02FF]|[\u0370-\u037D]|[\u037F-\u1FFF]|[\u200C-\u200D]|[\u2070-\u218F]|[\u2C00-\u2FEF]|[\u3001-\uD7FF]|[\uF900-\uFDCF]|[\uFDF0-\uFFFD])",
-    re.UNICODE,
+start_ranges = "|".join(
+    "[{0}]".format(r)
+    for r in [
+        "\xC0-\xD6",
+        "\xD8-\xF6",
+        "\xF8-\u02FF",
+        "\u0370-\u037D",
+        "\u037F-\u1FFF",
+        "\u200C-\u200D",
+        "\u2070-\u218F",
+        "\u2C00-\u2FEF",
+        "\u3001-\uD7FF",
+        "\uF900-\uFDCF",
+        "\uFDF0-\uFFFD",
+    ]
 )
-NameChar = re.compile(u"(\-|\.|[0-9]|\xB7|[\u0300-\u036F]|[\u203F-\u2040])", re.UNICODE)
+
+NameStartChar = re.compile(r"(:|[A-Z]|_|[a-z]|{0})".format(start_ranges))
+NameChar = re.compile(r"(\-|\.|[0-9]|\xB7|[\u0300-\u036F]|[\u203F-\u2040])")
 
 ########################
 ###   NODE
@@ -53,8 +66,8 @@ class Node(object):
         wrap = self.wrap
         end, start = "", ""
         if wrap:
-            end = "</%s>" % wrap
-            start = "<%s>" % wrap
+            end = "</{0}>".format(wrap)
+            start = "<{0}>".format(wrap)
 
         # Convert the data attached in this node into a value and children
         value, children = self.convert()
@@ -137,13 +150,13 @@ class Node(object):
         elif typ == "iterable":
             for item in data:
                 children.append(
-                    Node("", self.wrap, item, iterables_repeat_wrap=self.iterables_repeat_wrap)
+                    Node("", self.wrap, item, iterables_repeat_wrap=self.iterables_repeat_wrap,)
                 )
 
         else:
             val = six.text_type(data)
             if self.tag:
-                val = "<%s>%s</%s>" % (self.tag, val, self.tag)
+                val = "<{0}>{1}</{2}>".format(self.tag, val, self.tag)
 
         return val, children
 
@@ -218,12 +231,12 @@ class Converter(object):
                         and indent each line in the child by one indent unit
                 """
                 if wrapped:
-                    seperator = "\n%s" % indent
-                    surrounding = "\n%s%%s\n" % indent
+                    seperator = "\n{0}".format(indent)
+                    surrounding = "\n{0}{{0}}".format(indent)
                 else:
                     seperator = "\n"
-                    surrounding = "%s"
-                return surrounding % seperator.join(eachline(nodes))
+                    surrounding = "{0}"
+                return surrounding.format(seperator.join(eachline(nodes)))
 
         return ret
 
