@@ -10,9 +10,8 @@ setup(
 
     , extras_require =
       { 'tests' :
-        [ 'fudge'
-        , 'noseOfYeti>=1.7.0'
-        , 'nose'
+        [ "noseOfYeti==2.0.1"
+        , "pytest==5.3.1"
         ]
       }
 

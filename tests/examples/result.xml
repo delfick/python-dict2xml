@@ -1,4 +1,4 @@
-result = """<all>
+<all>
   <_3badtagstart>x</_3badtagstart>
   <_Xml_with_other_case_is_an_invalid_prefix>x</_Xml_with_other_case_is_an_invalid_prefix>
   <entitylist>
@@ -106,4 +106,3 @@ result = """<all>
   </web-app>
   <_xml_is_an_invalid_prefix>x</_xml_is_an_invalid_prefix>
 </all>
-"""

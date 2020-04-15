@@ -2,171 +2,165 @@
 
 from dict2xml import Node
 
-from nose.tools import nottest
-from unittest import TestCase
+from unittest import mock
 import collections.abc
 import collections
-import fudge
 
-describe TestCase, "Node":
+describe "Node":
     it "determines type at instantiation":
-        self.assertEqual(Node(data={}).type, "mapping")
-        self.assertEqual(Node(data=[]).type, "iterable")
+        assert Node(data={}).type == "mapping"
+        assert Node(data=[]).type == "iterable"
         for d in ["", "asdf", u"", u"asdf", 0, 1, False, True]:
-            self.assertEqual(Node(data=d).type, "flat")
+            assert Node(data=d).type == "flat"
 
     describe "Handling entities":
         it "will change string data to take entities into account":
             node = Node(data="<2&a>")
-            self.assertEqual(node.data, "&lt;2&amp;a&gt;")
+            assert node.data == "&lt;2&amp;a&gt;"
 
     describe "Determining type":
 
-        @nottest
-        def compare_type(self, *datas, **kwargs):
+        def assertType(self, *datas, **kwargs):
             expected = kwargs.get("expected", None)
             for d in datas:
-                self.assertEqual(Node(data=d).determine_type(), expected)
+                assert Node(data=d).determine_type() == expected
 
         it "says strings are flat":
-            self.compare_type("", "asdf", u"", u"asdf", expected="flat")
+            self.assertType("", "asdf", u"", u"asdf", expected="flat")
 
         it "says numbers and booleans are flat":
-            self.compare_type(0, 1, False, True, expected="flat")
+            self.assertType(0, 1, False, True, expected="flat")
 
         it "says anything that implements __iter__  is an iterable":
 
             class IterableObject(object):
-                def __iter__(self):
+                def __iter__(s):
                     return []
 
-            self.compare_type((), [], set(), IterableObject(), expected="iterable")
+            self.assertType((), [], set(), IterableObject(), expected="iterable")
 
         it "says anything that is a dict or subclass of collections.Mapping is a mapping":
 
             class MappingObject(collections.abc.Mapping):
-                def __len__(self):
+                def __len__(s):
                     return 0
 
-                def __iter__(self):
+                def __iter__(s):
                     return []
 
-                def __getitem__(self, key):
+                def __getitem__(s, key):
                     return key
 
-            self.compare_type({}, MappingObject(), expected="mapping")
+            self.assertType({}, MappingObject(), expected="mapping")
 
         it "can't determine if an object is a mapping if it isn't sublass of collections.Mapping":
             # Would be great if possible, but doesn't seem to be :(
             class WantsToBeMappingObject(object):
-                def __iter__(self):
+                def __iter__(s):
                     return []
 
-                def __getitem__(self, key):
+                def __getitem__(s, key):
                     return key
 
-            self.compare_type(WantsToBeMappingObject(), expected="iterable")
+            self.assertType(WantsToBeMappingObject(), expected="iterable")
 
     describe "Conversion":
 
-        @fudge.patch("dict2xml.logic.Node")
-        it "returns list of Nodes with key as wrap and item as data if type is mapping", fakeNode:
-            n1 = fudge.Fake("n1")
-            n2 = fudge.Fake("n2")
-            n3 = fudge.Fake("n3")
-            irw = fudge.Fake("irw")
-            data = dict(a=1, b=2, c=3)
-            (
-                fakeNode.expects_call()
-                .with_args("a", "", 1, iterables_repeat_wrap=irw)
-                .returns(n1)
-                .next_call()
-                .with_args("b", "", 2, iterables_repeat_wrap=irw)
-                .returns(n2)
-                .next_call()
-                .with_args("c", "", 3, iterables_repeat_wrap=irw)
-                .returns(n3)
-            )
+        it "returns list of Nodes with key as wrap and item as data if type is mapping":
 
-            self.assertEqual(
-                Node(data=data, iterables_repeat_wrap=irw).convert(), ("", [n1, n2, n3])
-            )
+            called = []
 
-        @fudge.patch("dict2xml.logic.Node")
-        it "respects the order of an OrderedDict", fakeNode:
-            n1 = fudge.Fake("n1")
-            n2 = fudge.Fake("n2")
-            n3 = fudge.Fake("n3")
-            irw = fudge.Fake("irw")
-            data = collections.OrderedDict([("b", 2), ("c", 3), ("a", 1)])
-            (
-                fakeNode.expects_call()
-                .with_args("b", "", 2, iterables_repeat_wrap=irw)
-                .returns(n2)
-                .next_call()
-                .with_args("c", "", 3, iterables_repeat_wrap=irw)
-                .returns(n3)
-                .next_call()
-                .with_args("a", "", 1, iterables_repeat_wrap=irw)
-                .returns(n1)
-            )
+            nodes = [mock.Mock(name="n{0}".format(i)) for i in range(3)]
 
-            self.assertEqual(
-                Node(data=data, iterables_repeat_wrap=irw).convert(), ("", [n2, n3, n1])
-            )
+            def N(*args, **kwargs):
+                called.append(1)
+                return nodes[len(called) - 1]
 
-        @fudge.patch("dict2xml.logic.Node")
-        it "returns list of Nodes with wrap as tag and item as data if type is iterable", fakeNode:
-            n1 = fudge.Fake("n1")
-            n2 = fudge.Fake("n2")
-            n3 = fudge.Fake("n3")
-            irw = fudge.Fake("irw")
-            wrap = fudge.Fake("wrap")
-            data = [1, 2, 3]
-            (
-                fakeNode.expects_call()
-                .with_args("", wrap, 1, iterables_repeat_wrap=irw)
-                .returns(n1)
-                .next_call()
-                .with_args("", wrap, 2, iterables_repeat_wrap=irw)
-                .returns(n2)
-                .next_call()
-                .with_args("", wrap, 3, iterables_repeat_wrap=irw)
-                .returns(n3)
-            )
+            irw = mock.Mock("irw")
+            FakeNode = mock.Mock(name="Node", side_effect=N)
 
-            self.assertEqual(
-                Node(wrap=wrap, data=data, iterables_repeat_wrap=irw).convert(), ("", [n1, n2, n3])
-            )
+            with mock.patch("dict2xml.logic.Node", FakeNode):
+                data = dict(a=1, b=2, c=3)
+                result = Node(data=data, iterables_repeat_wrap=irw).convert()
+                assert result == ("", nodes)
+
+            assert FakeNode.mock_calls == [
+                mock.call("a", "", 1, iterables_repeat_wrap=irw),
+                mock.call("b", "", 2, iterables_repeat_wrap=irw),
+                mock.call("c", "", 3, iterables_repeat_wrap=irw),
+            ]
+
+        it "respects the order of an OrderedDict":
+            called = []
+
+            nodes = [mock.Mock(name="n{0}".format(i)) for i in range(3)]
+
+            def N(*args, **kwargs):
+                called.append(1)
+                return nodes[len(called) - 1]
+
+            irw = mock.Mock("irw")
+            FakeNode = mock.Mock(name="Node", side_effect=N)
+
+            with mock.patch("dict2xml.logic.Node", FakeNode):
+                data = collections.OrderedDict([("b", 2), ("c", 3), ("a", 1)])
+                result = Node(data=data, iterables_repeat_wrap=irw).convert()
+                assert result == ("", nodes)
+
+            assert FakeNode.mock_calls == [
+                mock.call("b", "", 2, iterables_repeat_wrap=irw),
+                mock.call("c", "", 3, iterables_repeat_wrap=irw),
+                mock.call("a", "", 1, iterables_repeat_wrap=irw),
+            ]
+
+        it "returns list of Nodes with wrap as tag and item as data if type is iterable":
+            called = []
+
+            nodes = [mock.Mock(name="n{0}".format(i)) for i in range(3)]
+
+            def N(*args, **kwargs):
+                called.append(1)
+                return nodes[len(called) - 1]
+
+            irw = mock.Mock("irw")
+            FakeNode = mock.Mock(name="Node", side_effect=N)
+
+            with mock.patch("dict2xml.logic.Node", FakeNode):
+                data = [1, 2, 3]
+                result = Node(data=data, iterables_repeat_wrap=irw).convert()
+                assert result == ("", nodes)
+
+            assert FakeNode.mock_calls == [
+                mock.call("", "", 1, iterables_repeat_wrap=irw),
+                mock.call("", "", 2, iterables_repeat_wrap=irw),
+                mock.call("", "", 3, iterables_repeat_wrap=irw),
+            ]
 
         it "returns data enclosed in tags made from self.tag if not iterable or mapping":
             tag = "thing"
             results = []
             for d in [0, 1, "", u"", "asdf", u"qwer", False, True]:
                 val, children = Node(tag=tag, data=d).convert()
-                self.assertEqual(len(children), 0)
+                assert len(children) == 0
                 results.append(val)
 
-            self.assertEqual(
-                results,
-                [
-                    "<thing>0</thing>",
-                    "<thing>1</thing>",
-                    "<thing></thing>",
-                    "<thing></thing>",
-                    "<thing>asdf</thing>",
-                    "<thing>qwer</thing>",
-                    "<thing>False</thing>",
-                    "<thing>True</thing>",
-                ],
-            )
+            assert results == [
+                "<thing>0</thing>",
+                "<thing>1</thing>",
+                "<thing></thing>",
+                "<thing></thing>",
+                "<thing>asdf</thing>",
+                "<thing>qwer</thing>",
+                "<thing>False</thing>",
+                "<thing>True</thing>",
+            ]
 
         it "returns data as is if not iterable or mapping and no self.tag":
             tag = ""
             results = []
             for d in [0, 1, "", u"", "asdf", u"qwer", False, True]:
                 val, children = Node(tag=tag, data=d).convert()
-                self.assertEqual(len(children), 0)
+                assert len(children) == 0
                 results.append(val)
 
-            self.assertEqual(results, ["0", "1", "", "", "asdf", "qwer", "False", "True"])
+            assert results == ["0", "1", "", "", "asdf", "qwer", "False", "True"]

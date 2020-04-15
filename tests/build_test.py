@@ -2,42 +2,47 @@
 
 from dict2xml import Converter, dict2xml
 
-from unittest import TestCase
 from textwrap import dedent
-import fudge
+from unittest import mock
+import pytest
+import json
+import os
 
-describe TestCase, "Build":
+examples = os.path.join(os.path.dirname(__file__), "examples")
 
-    def compare(self, data, result, **kwargs):
-        self.assertEqual.__self__.maxDiff = None
-        converter = Converter(wrap="all", **kwargs)
-        made = converter.build(data)
-        self.assertEqual(result.strip(), made)
-
+describe "Build":
     describe "Convenience Function":
 
-        @fudge.patch("dict2xml.Converter")
-        it "Creates a Converter with *args and **kwargs and calls build on it with provided data", fakeConverter:
-            data = fudge.Fake("data")
-            serialized = fudge.Fake("serialized")
-            (
-                fakeConverter.expects_call()
-                .with_args(1, 2, 3, a=5, b=8)
-                .returns_fake()
-                .expects("build")
-                .with_args(data)
-                .returns(serialized)
-            )
+        it "Creates a Converter with *args and **kwargs and calls build on it with provided data":
+            data = mock.Mock(name="data")
+            serialized = mock.Mock(name="serialized")
 
-            self.assertEqual(dict2xml(data, 1, 2, 3, a=5, b=8), serialized)
+            converter = mock.Mock(name="converter")
+            converter.build.return_value = serialized
+
+            FakeConverter = mock.Mock(name="Converter", return_value=converter)
+
+            with mock.patch("dict2xml.Converter", FakeConverter):
+                assert dict2xml(data, 1, 2, 3, a=5, b=8) is serialized
+
+            FakeConverter.assert_called_once_with(1, 2, 3, a=5, b=8)
+            converter.build.assert_called_once_with(data)
 
     describe "Just Working":
-        before_each:
-            self.data = {"a": [1, 2, 3], "b": {"c": "d", "e": {"f": "g"}}, "d": 1}
 
-        it "with both indentation and newlines":
-            expected = dedent(
-                """
+        @pytest.fixture()
+        def assertResult(self):
+            def assertResult(result, **kwargs):
+                data = {"a": [1, 2, 3], "b": {"c": "d", "e": {"f": "g"}}, "d": 1}
+
+                converter = Converter(wrap="all", **kwargs)
+                print(converter.build(data))
+                assert dedent(result).strip() == converter.build(data)
+
+            return assertResult
+
+        it "with both indentation and newlines", assertResult:
+            expected = """
                 <all>
                   <a>1</a>
                   <a>2</a>
@@ -49,13 +54,12 @@ describe TestCase, "Build":
                     </e>
                   </b>
                   <d>1</d>
-                </all>"""
-            )
-            self.compare(self.data, expected, indent="  ", newlines=True)
+                </all>
+            """
+            assertResult(expected, indent="  ", newlines=True)
 
-        it "with just newlines":
-            expected = dedent(
-                """
+        it "with just newlines", assertResult:
+            expected = """
                 <all>
                 <a>1</a>
                 <a>2</a>
@@ -67,21 +71,25 @@ describe TestCase, "Build":
                 </e>
                 </b>
                 <d>1</d>
-                </all>"""
-            )
-            self.compare(self.data, expected, indent=None, newlines=True)
+                </all>
+            """
+            assertResult(expected, indent=None, newlines=True)
 
-        it "with just indentation":
-            # Indentation requires newlines to work... so meh
+        it "with just indentation", assertResult:
+            # Indentation requires newlines to work
             expected = "<all><a>1</a><a>2</a><a>3</a><b><c>d</c><e><f>g</f></e></b><d>1</d></all>"
-            self.compare(self.data, expected, indent="  ", newlines=False)
+            assertResult(expected, indent="  ", newlines=False)
 
-        it "with no whitespace":
+        it "with no whitespace", assertResult:
             expected = "<all><a>1</a><a>2</a><a>3</a><b><c>d</c><e><f>g</f></e></b><d>1</d></all>"
-            self.compare(self.data, expected, indent=None, newlines=False)
+            assertResult(expected, indent=None, newlines=False)
 
         it "works on a massive, complex dictionary":
-            from tests.examples.python_dict import data
-            from tests.examples.xml_result import result
+            with open(os.path.join(examples, "python_dict.json"), "r") as fle:
+                data = json.load(fle)
 
-            self.compare(data, result, indent="  ", newlines=True)
+            with open(os.path.join(examples, "result.xml"), "r") as fle:
+                result = fle.read()
+
+            converter = Converter(wrap="all", indent="  ", newlines=True)
+            assert dedent(result).strip() == converter.build(data)
