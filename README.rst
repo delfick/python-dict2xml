@@ -89,10 +89,13 @@ Limitations
 Changelog
 ---------
 
-1.6.1
+1.7 - TBD
+    * Use collections.abc to avoid deprecation warning. Thanks @mangin.
+
+1.6.1 - August 27, 2019
     * Include readme and LICENSE in the package
 
-1.6
+1.6 - April 27, 2018
     * No code changes
     * changed the licence to MIT
     * Added more metadata to pypi
