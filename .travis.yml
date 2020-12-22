@@ -1,5 +1,7 @@
 language: python
-
+arch:
+  - amd64
+  - ppc64le
 dist: xenial
 
 python:
