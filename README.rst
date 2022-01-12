@@ -77,8 +77,42 @@ methods
     * indent: Amount to prefix each line for each level of nesting
     * newlines: Whether or not to use newlines
 
-``dict2xml.Converter.build(data)``
+``dict2xml.Converter.build(data, iterables_repeat_wrap=True, closed_tags_for=None)``
     Instance method on Converter that takes in the data and creates the xml string
+
+    * iterables_repeat_wrap - when false the key the array is in will be repeated
+    * closed_tags_for - an array of values that will produce self closing tags
+
+Self closing tags
+-----------------
+
+To produce self closing tags (like ``<item/>``) then the ``build`` method must
+be given a list of values under ``closed_tags_for``. For example, if you want
+``None`` to produce a closing tag then:
+
+.. code-block:: python
+
+    example = {
+        "item1": None,
+        "item2": {"string1": "", "string2": None},
+        "item3": "special",
+    }
+
+    result = Converter("").build(example, closed_tags_for=[None])
+    assert result == dedent("""
+        <item1/>
+        <item2>
+            <string1></string1>
+            <string2/>
+        </item2>
+        <item3>special</item3>
+    """).strip())
+
+Here only ``string2`` gets a self closing tag because it has data of ``None``,
+which has been designated as special.
+
+If you want to dynamically work out which tags should be self closing then you
+may provide an object that implements ``__eq__`` and do your logic there.
 
 Limitations
 -----------
@@ -89,6 +123,10 @@ Limitations
 
 Changelog
 ---------
+
+1.7.1 - TBD
+    * Adding an option to have self closing tags when the value for that
+      tag equals certain values
 
 1.7.0 - 16 April, 2020
     * Use collections.abc to avoid deprecation warning. Thanks @mangin.
