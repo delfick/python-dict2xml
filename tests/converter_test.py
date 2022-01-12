@@ -32,7 +32,9 @@ describe "Converter":
             with mip, fnp:
                 assert converter.build(data) is serialized
 
-            FakeNode.assert_called_once_with(wrap=wrap, data=data, iterables_repeat_wrap=True)
+            FakeNode.assert_called_once_with(
+                wrap=wrap, data=data, iterables_repeat_wrap=True, closed_tags_for=None
+            )
             node.serialize.assert_called_once_with(indenter)
 
         it "doesn't repeat the wrap if iterables_repeat_wrap is False":
@@ -58,6 +60,59 @@ describe "Converter":
                     <string2>other string</string2>
                   </item>
                 </array>
+            """
+                ).strip()
+            )
+
+        it "can produce self closing tags":
+            example = {
+                "item1": None,
+                "item2": {"string1": "", "string2": None},
+                "item3": "special",
+            }
+
+            result = Converter("").build(example, closed_tags_for=[None])
+            assert (
+                result
+                == dedent(
+                    """
+                <item1/>
+                <item2>
+                  <string1></string1>
+                  <string2/>
+                </item2>
+                <item3>special</item3>
+            """
+                ).strip()
+            )
+
+            result = Converter("").build(example, closed_tags_for=[None, ""])
+            assert (
+                result
+                == dedent(
+                    """
+                <item1/>
+                <item2>
+                  <string1/>
+                  <string2/>
+                </item2>
+                <item3>special</item3>
+            """
+                ).strip()
+            )
+
+            result = Converter("").build(example, closed_tags_for=["special"])
+            print(result)
+            assert (
+                result
+                == dedent(
+                    """
+                <item1>None</item1>
+                <item2>
+                  <string1></string1>
+                  <string2>None</string2>
+                </item2>
+                <item3/>
             """
                 ).strip()
             )

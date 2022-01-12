@@ -77,17 +77,18 @@ describe "Node":
                 return nodes[len(called) - 1]
 
             irw = mock.Mock("irw")
+            ctf = mock.Mock("ctf")
             FakeNode = mock.Mock(name="Node", side_effect=N)
 
             with mock.patch("dict2xml.logic.Node", FakeNode):
                 data = dict(a=1, b=2, c=3)
-                result = Node(data=data, iterables_repeat_wrap=irw).convert()
+                result = Node(data=data, iterables_repeat_wrap=irw, closed_tags_for=ctf).convert()
                 assert result == ("", nodes)
 
             assert FakeNode.mock_calls == [
-                mock.call("a", "", 1, iterables_repeat_wrap=irw),
-                mock.call("b", "", 2, iterables_repeat_wrap=irw),
-                mock.call("c", "", 3, iterables_repeat_wrap=irw),
+                mock.call("a", "", 1, iterables_repeat_wrap=irw, closed_tags_for=ctf),
+                mock.call("b", "", 2, iterables_repeat_wrap=irw, closed_tags_for=ctf),
+                mock.call("c", "", 3, iterables_repeat_wrap=irw, closed_tags_for=ctf),
             ]
 
         it "respects the order of an OrderedDict":
@@ -100,17 +101,18 @@ describe "Node":
                 return nodes[len(called) - 1]
 
             irw = mock.Mock("irw")
+            ctf = mock.Mock("ctf")
             FakeNode = mock.Mock(name="Node", side_effect=N)
 
             with mock.patch("dict2xml.logic.Node", FakeNode):
                 data = collections.OrderedDict([("b", 2), ("c", 3), ("a", 1)])
-                result = Node(data=data, iterables_repeat_wrap=irw).convert()
+                result = Node(data=data, iterables_repeat_wrap=irw, closed_tags_for=ctf).convert()
                 assert result == ("", nodes)
 
             assert FakeNode.mock_calls == [
-                mock.call("b", "", 2, iterables_repeat_wrap=irw),
-                mock.call("c", "", 3, iterables_repeat_wrap=irw),
-                mock.call("a", "", 1, iterables_repeat_wrap=irw),
+                mock.call("b", "", 2, iterables_repeat_wrap=irw, closed_tags_for=ctf),
+                mock.call("c", "", 3, iterables_repeat_wrap=irw, closed_tags_for=ctf),
+                mock.call("a", "", 1, iterables_repeat_wrap=irw, closed_tags_for=ctf),
             ]
 
         it "returns list of Nodes with wrap as tag and item as data if type is iterable":
@@ -123,17 +125,18 @@ describe "Node":
                 return nodes[len(called) - 1]
 
             irw = mock.Mock("irw")
+            ctf = mock.Mock("ctf")
             FakeNode = mock.Mock(name="Node", side_effect=N)
 
             with mock.patch("dict2xml.logic.Node", FakeNode):
                 data = [1, 2, 3]
-                result = Node(data=data, iterables_repeat_wrap=irw).convert()
+                result = Node(data=data, iterables_repeat_wrap=irw, closed_tags_for=ctf).convert()
                 assert result == ("", nodes)
 
             assert FakeNode.mock_calls == [
-                mock.call("", "", 1, iterables_repeat_wrap=irw),
-                mock.call("", "", 2, iterables_repeat_wrap=irw),
-                mock.call("", "", 3, iterables_repeat_wrap=irw),
+                mock.call("", "", 1, iterables_repeat_wrap=irw, closed_tags_for=ctf),
+                mock.call("", "", 2, iterables_repeat_wrap=irw, closed_tags_for=ctf),
+                mock.call("", "", 3, iterables_repeat_wrap=irw, closed_tags_for=ctf),
             ]
 
         it "returns data enclosed in tags made from self.tag if not iterable or mapping":

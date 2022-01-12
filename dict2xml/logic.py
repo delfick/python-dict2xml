@@ -47,11 +47,14 @@ class Node(object):
     # A mapping of characters to treat as escapable entities and their replacements
     entities = [("&", "&amp;"), ("<", "&lt;"), (">", "&gt;")]
 
-    def __init__(self, wrap="", tag="", data=None, iterables_repeat_wrap=True):
+    def __init__(
+        self, wrap="", tag="", data=None, iterables_repeat_wrap=True, closed_tags_for=None
+    ):
         self.tag = self.sanitize_element(tag)
         self.wrap = self.sanitize_element(wrap)
         self.data = data
         self.type = self.determine_type()
+        self.closed_tags_for = closed_tags_for
         self.iterables_repeat_wrap = iterables_repeat_wrap
 
         if self.type == "flat" and isinstance(self.data, str):
@@ -67,6 +70,9 @@ class Node(object):
         if wrap:
             end = "</{0}>".format(wrap)
             start = "<{0}>".format(wrap)
+
+        if self.closed_tags_for and self.data in self.closed_tags_for:
+            return "<{0}/>".format(self.wrap)
 
         # Convert the data attached in this node into a value and children
         value, children = self.convert()
@@ -143,7 +149,13 @@ class Node(object):
             for key in sorted_data:
                 item = data[key]
                 children.append(
-                    Node(key, "", item, iterables_repeat_wrap=self.iterables_repeat_wrap)
+                    Node(
+                        key,
+                        "",
+                        item,
+                        iterables_repeat_wrap=self.iterables_repeat_wrap,
+                        closed_tags_for=self.closed_tags_for,
+                    )
                 )
 
         elif typ == "iterable":
@@ -154,6 +166,7 @@ class Node(object):
                         self.wrap,
                         item,
                         iterables_repeat_wrap=self.iterables_repeat_wrap,
+                        closed_tags_for=self.closed_tags_for,
                     )
                 )
 
@@ -244,9 +257,12 @@ class Converter(object):
 
         return ret
 
-    def build(self, data, iterables_repeat_wrap=True):
+    def build(self, data, iterables_repeat_wrap=True, closed_tags_for=None):
         """Create a Node tree from the data and return it as a serialized xml string"""
         indenter = self._make_indenter()
         return Node(
-            wrap=self.wrap, data=data, iterables_repeat_wrap=iterables_repeat_wrap
+            wrap=self.wrap,
+            data=data,
+            iterables_repeat_wrap=iterables_repeat_wrap,
+            closed_tags_for=closed_tags_for,
         ).serialize(indenter)
