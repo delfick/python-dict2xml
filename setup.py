@@ -1,3 +1,4 @@
+from dict2xml import VERSION
 from setuptools import setup
 
 # fmt: off
@@ -5,7 +6,7 @@ from setuptools import setup
 # Setup the project
 setup(
       name = "dict2xml"
-    , version = '1.7.0'
+    , version = VERSION
     , packages = ['dict2xml']
     
     , python_requires = ">= 3.5"
