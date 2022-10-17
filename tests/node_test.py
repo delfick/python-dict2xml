@@ -10,7 +10,7 @@ describe "Node":
     it "determines type at instantiation":
         assert Node(data={}).type == "mapping"
         assert Node(data=[]).type == "iterable"
-        for d in ["", "asdf", u"", u"asdf", 0, 1, False, True]:
+        for d in ["", "asdf", "", "asdf", 0, 1, False, True]:
             assert Node(data=d).type == "flat"
 
     describe "Handling entities":
@@ -26,7 +26,7 @@ describe "Node":
                 assert Node(data=d).determine_type() == expected
 
         it "says strings are flat":
-            self.assertType("", "asdf", u"", u"asdf", expected="flat")
+            self.assertType("", "asdf", "", "asdf", expected="flat")
 
         it "says numbers and booleans are flat":
             self.assertType(0, 1, False, True, expected="flat")
@@ -142,7 +142,7 @@ describe "Node":
         it "returns data enclosed in tags made from self.tag if not iterable or mapping":
             tag = "thing"
             results = []
-            for d in [0, 1, "", u"", "asdf", u"qwer", False, True]:
+            for d in [0, 1, "", "", "asdf", "qwer", False, True]:
                 val, children = Node(tag=tag, data=d).convert()
                 assert len(children) == 0
                 results.append(val)
@@ -161,7 +161,7 @@ describe "Node":
         it "returns data as is if not iterable or mapping and no self.tag":
             tag = ""
             results = []
-            for d in [0, 1, "", u"", "asdf", u"qwer", False, True]:
+            for d in [0, 1, "", "", "asdf", "qwer", False, True]:
                 val, children = Node(tag=tag, data=d).convert()
                 assert len(children) == 0
                 results.append(val)
