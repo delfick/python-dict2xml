@@ -1,6 +1,6 @@
 from dict2xml.logic import Converter, Node
 
-VERSION = "1.7.1"
+VERSION = "1.7.2"
 
 
 def dict2xml(data, *args, **kwargs):

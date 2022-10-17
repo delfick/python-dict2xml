@@ -124,7 +124,11 @@ Limitations
 Changelog
 ---------
 
-1.7.1 - TBD
+1.7.2 - 18 Oct 2022
+    * This version has no changes to the installed code.
+    * This release adds the tests to the source distribution put onto pypi.
+
+1.7.1 - 16 Feb 2022
     * Adding an option to have self closing tags when the value for that
       tag equals certain values
 
