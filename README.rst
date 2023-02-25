@@ -6,18 +6,9 @@ Super Simple utility to convert a python dictionary into an xml string
 Installation
 ------------
 
-Make youself a virtualenv and do the following::
+Install using pip::
 
-  $ pip install .
-
-Or if you want to develop on dict2xml, recommended commands are::
-
-  $ pip install -e .
-  $ pip install -e ".[tests]"
-
-Or if you don't want to install from source::
-
-  $ pip install dict2xml
+  > python -m pip install dict2xml
 
 example
 -------
@@ -150,3 +141,29 @@ Changelog
 
 1.5
     * No changelog was kept before this point.
+
+Development
+-----------
+
+To enter a virtualenv with dict2xml and dev requirements installed run::
+
+    > source run.sh activate
+
+Tests may be run with::
+
+    > ./test.sh 
+
+Or::
+
+    > ./run.sh tox
+
+Linting and formatting is via::
+
+    > ./format
+    > ./lint
+
+Python Black will work on the tests as long as ``NOSE_OF_YETI_BLACK_COMPAT=true``
+and the correct version of black is available. This is true if your editor
+is opened in the same terminal session after sourcing run.sh or if
+you make sure that environment variable is set and the editor is using the
+virtualenv made by running or sourcing ``run.sh`` (``tools/venv/.python``)

@@ -1,5 +1,6 @@
-from dict2xml import VERSION
 from setuptools import setup
+
+from dict2xml import VERSION
 
 # fmt: off
 
@@ -13,8 +14,8 @@ setup(
 
     , extras_require =
       { 'tests' :
-        [ "noseOfYeti==2.3.1"
-        , "pytest==7.1.3"
+        [ "noseOfYeti[black]==2.4.1"
+        , "pytest==7.2.1"
         ]
       }
 

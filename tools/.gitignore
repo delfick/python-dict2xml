@@ -1,3 +1,2 @@
-.noy_pylama
-.isort
-.noy_black
+.python
+deps
