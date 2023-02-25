@@ -1,10 +1,10 @@
 # coding: spec
 
-from dict2xml import Node
-
-from unittest import mock
-import collections.abc
 import collections
+import collections.abc
+from unittest import mock
+
+from dict2xml import Node
 
 describe "Node":
     it "determines type at instantiation":

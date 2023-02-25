@@ -1,12 +1,13 @@
 # coding: spec
 
-from dict2xml import Converter, dict2xml
-
-from textwrap import dedent
-from unittest import mock
-import pytest
 import json
 import os
+from textwrap import dedent
+from unittest import mock
+
+import pytest
+
+from dict2xml import Converter, dict2xml
 
 examples = os.path.join(os.path.dirname(__file__), "examples")
 

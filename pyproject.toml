@@ -9,3 +9,12 @@ exclude = '''
    | tools
 )/
 '''
+
+[tool.isort]
+profile = "black"
+skip_glob = [
+   ".git/*",
+   ".tox/*",
+   "dist/*",
+   "tools/.*",
+]

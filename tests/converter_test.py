@@ -1,10 +1,11 @@
 # coding: spec
 
-from dict2xml import Converter
-
 from textwrap import dedent
 from unittest import mock
+
 import pytest
+
+from dict2xml import Converter
 
 describe "Converter":
     describe "Building":

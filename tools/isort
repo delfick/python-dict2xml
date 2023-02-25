@@ -1,0 +1,10 @@
+#!/usr/bin/env python3
+
+import runpy
+from pathlib import Path
+
+runpy.run_path(str(Path(__file__).parent / "bootstrap_venvstarter.py"))
+
+manager = __import__("venvstarter").manager("isort")
+manager.add_pypi_deps("isort==5.12.0", "noseOfYeti>=2.3.1")
+manager.run()

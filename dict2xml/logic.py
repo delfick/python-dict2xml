@@ -1,5 +1,5 @@
-import collections.abc
 import collections
+import collections.abc
 import re
 
 start_ranges = "|".join(
