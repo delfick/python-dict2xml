@@ -119,6 +119,7 @@ Changelog
     * This version has no changes to the installed code.
     * This release converts to hatch for packaging and adds a wheel to the
       package on pypi.
+    * CI will now run against python 3.11 as well
 
 1.7.2 - 18 Oct 2022
     * This version has no changes to the installed code.
