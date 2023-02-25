@@ -115,6 +115,11 @@ Limitations
 Changelog
 ---------
 
+1.7.3 - TBD
+    * This version has no changes to the installed code.
+    * This release converts to hatch for packaging and adds a wheel to the
+      package on pypi.
+
 1.7.2 - 18 Oct 2022
     * This version has no changes to the installed code.
     * This release adds the tests to the source distribution put onto pypi.

@@ -1,6 +1,0 @@
-include README.rst
-include LICENSE
-include test.sh
-include pytest.ini
-recursive-include tests *
-global-exclude *.pyc
