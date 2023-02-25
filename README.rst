@@ -115,7 +115,7 @@ Limitations
 Changelog
 ---------
 
-1.7.3 - TBD
+1.7.3 - 25 Feb 2023
     * This version has no changes to the installed code.
     * This release converts to hatch for packaging and adds a wheel to the
       package on pypi.
