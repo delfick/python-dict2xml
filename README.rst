@@ -74,6 +74,9 @@ methods
     * iterables_repeat_wrap - when false the key the array is in will be repeated
     * closed_tags_for - an array of values that will produce self closing tags
 
+    Note that to ensure the build is deterministic, keys in a mapping will be
+    sorted unless that mapping is an instance of ``collections.OrderedDict``.
+
 Self closing tags
 -----------------
 
