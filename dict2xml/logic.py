@@ -60,13 +60,19 @@ class Node(object):
     entities = [("&", "&amp;"), ("<", "&lt;"), (">", "&gt;")]
 
     def __init__(
-        self, wrap="", tag="", data=None, iterables_repeat_wrap=True, closed_tags_for=None
+        self,
+        wrap="",
+        tag="",
+        data=None,
+        iterables_repeat_wrap=True,
+        closed_tags_for=None,
+        data_sorter=None,
     ):
         self.tag = self.sanitize_element(tag)
         self.wrap = self.sanitize_element(wrap)
         self.data = data
         self.type = self.determine_type()
-        self.data_sorter = DataSorter()
+        self.data_sorter = data_sorter if data_sorter is not None else DataSorter()
         self.closed_tags_for = closed_tags_for
         self.iterables_repeat_wrap = iterables_repeat_wrap
 
@@ -166,6 +172,7 @@ class Node(object):
                         item,
                         iterables_repeat_wrap=self.iterables_repeat_wrap,
                         closed_tags_for=self.closed_tags_for,
+                        data_sorter=self.data_sorter,
                     )
                 )
 
@@ -178,6 +185,7 @@ class Node(object):
                         item,
                         iterables_repeat_wrap=self.iterables_repeat_wrap,
                         closed_tags_for=self.closed_tags_for,
+                        data_sorter=self.data_sorter,
                     )
                 )
 
@@ -268,7 +276,7 @@ class Converter(object):
 
         return ret
 
-    def build(self, data, iterables_repeat_wrap=True, closed_tags_for=None):
+    def build(self, data, iterables_repeat_wrap=True, closed_tags_for=None, data_sorter=None):
         """Create a Node tree from the data and return it as a serialized xml string"""
         indenter = self._make_indenter()
         return Node(
@@ -276,4 +284,5 @@ class Converter(object):
             data=data,
             iterables_repeat_wrap=iterables_repeat_wrap,
             closed_tags_for=closed_tags_for,
+            data_sorter=data_sorter,
         ).serialize(indenter)
