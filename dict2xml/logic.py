@@ -38,6 +38,14 @@ class DataSorter:
             sorted_data = sorted(data)
         return sorted_data
 
+    class always:
+        def keys_from(self, data):
+            return sorted(data)
+
+    class never:
+        def keys_from(self, data):
+            return data
+
 
 class Node(object):
     """

@@ -133,6 +133,72 @@ describe "Node":
                 ),
             ]
 
+        it "can be told to also sort OrderedDict":
+            called = []
+
+            nodes = [mock.Mock(name="n{0}".format(i)) for i in range(3)]
+
+            def N(*args, **kwargs):
+                called.append(1)
+                return nodes[len(called) - 1]
+
+            ds = DataSorter.always()
+            irw = mock.Mock("irw")
+            ctf = mock.Mock("ctf")
+            FakeNode = mock.Mock(name="Node", side_effect=N)
+
+            with mock.patch("dict2xml.logic.Node", FakeNode):
+                data = collections.OrderedDict([("b", 2), ("c", 3), ("a", 1)])
+                result = Node(
+                    data=data, iterables_repeat_wrap=irw, closed_tags_for=ctf, data_sorter=ds
+                ).convert()
+                assert result == ("", nodes)
+
+            assert FakeNode.mock_calls == [
+                mock.call(
+                    "a", "", 1, iterables_repeat_wrap=irw, closed_tags_for=ctf, data_sorter=ds
+                ),
+                mock.call(
+                    "b", "", 2, iterables_repeat_wrap=irw, closed_tags_for=ctf, data_sorter=ds
+                ),
+                mock.call(
+                    "c", "", 3, iterables_repeat_wrap=irw, closed_tags_for=ctf, data_sorter=ds
+                ),
+            ]
+
+        it "can be told to never sort":
+            called = []
+
+            nodes = [mock.Mock(name="n{0}".format(i)) for i in range(3)]
+
+            def N(*args, **kwargs):
+                called.append(1)
+                return nodes[len(called) - 1]
+
+            ds = DataSorter.never()
+            irw = mock.Mock("irw")
+            ctf = mock.Mock("ctf")
+            FakeNode = mock.Mock(name="Node", side_effect=N)
+
+            with mock.patch("dict2xml.logic.Node", FakeNode):
+                data = {"c": 3, "a": 1, "b": 2}
+                result = Node(
+                    data=data, iterables_repeat_wrap=irw, closed_tags_for=ctf, data_sorter=ds
+                ).convert()
+                assert result == ("", nodes)
+
+            assert FakeNode.mock_calls == [
+                mock.call(
+                    "c", "", 3, iterables_repeat_wrap=irw, closed_tags_for=ctf, data_sorter=ds
+                ),
+                mock.call(
+                    "a", "", 1, iterables_repeat_wrap=irw, closed_tags_for=ctf, data_sorter=ds
+                ),
+                mock.call(
+                    "b", "", 2, iterables_repeat_wrap=irw, closed_tags_for=ctf, data_sorter=ds
+                ),
+            ]
+
         it "returns list of Nodes with wrap as tag and item as data if type is iterable":
             called = []
 
