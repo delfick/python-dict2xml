@@ -68,14 +68,33 @@ methods
     * indent: Amount to prefix each line for each level of nesting
     * newlines: Whether or not to use newlines
 
-``dict2xml.Converter.build(data, iterables_repeat_wrap=True, closed_tags_for=None)``
+``dict2xml.Converter.build(data, iterables_repeat_wrap=True, closed_tags_for=None, data_sorter=None)``
     Instance method on Converter that takes in the data and creates the xml string
 
     * iterables_repeat_wrap - when false the key the array is in will be repeated
     * closed_tags_for - an array of values that will produce self closing tags
+    * data_sorter - an object as explained below for sorting keys in maps
 
-    Note that to ensure the build is deterministic, keys in a mapping will be
-    sorted unless that mapping is an instance of ``collections.OrderedDict``.
+``dict2xml.DataSorter``
+    An object used to determine the sorting of keys for a map of data.
+
+    By default an ``OrderedDict`` object will not have it's keys sorted, but any
+    other type of mapping will.
+
+    It can be made so even ``OrderedDict`` will get sorted by passing in
+    ``data_sorter=DataSorter.always()``.
+
+    Or it can be made so that keys are produced from the sorting determined by
+    the mapping with ``data_sorter=DataSorter.never()``.
+
+    .. note:: When this library was first created python did not have deterministic
+       sorting for normal dictionaries which is why default everything gets sorted but
+       ``OrderedDict`` do not.
+
+    To create custom sorting logic requires an object that has a single ``keys_from``
+    method on it that accepts a map of data and returns a list of strings, where only
+    the keys that appear in the list will go into the output and those keys must exist
+    in the original mapping.
 
 Self closing tags
 -----------------
