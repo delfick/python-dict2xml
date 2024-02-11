@@ -27,6 +27,18 @@ NameChar = re.compile(r"(\-|\.|[0-9]|\xB7|[\u0300-\u036F]|[\u203F-\u2040])")
 ########################
 
 
+class DataSorter:
+    """
+    Used to sort a map of data depending on it's type
+    """
+
+    def keys_from(self, data):
+        sorted_data = data
+        if not isinstance(data, collections.OrderedDict):
+            sorted_data = sorted(data)
+        return sorted_data
+
+
 class Node(object):
     """
     Represents each tag in the tree
@@ -54,6 +66,7 @@ class Node(object):
         self.wrap = self.sanitize_element(wrap)
         self.data = data
         self.type = self.determine_type()
+        self.data_sorter = DataSorter()
         self.closed_tags_for = closed_tags_for
         self.iterables_repeat_wrap = iterables_repeat_wrap
 
@@ -142,11 +155,9 @@ class Node(object):
         children = []
 
         if typ == "mapping":
-            sorted_data = data
-            if not isinstance(data, collections.OrderedDict):
-                sorted_data = sorted(data)
+            sorted_keys = self.data_sorter.keys_from(data)
 
-            for key in sorted_data:
+            for key in sorted_keys:
                 item = data[key]
                 children.append(
                     Node(
