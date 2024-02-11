@@ -34,7 +34,11 @@ describe "Converter":
                 assert converter.build(data) is serialized
 
             FakeNode.assert_called_once_with(
-                wrap=wrap, data=data, iterables_repeat_wrap=True, closed_tags_for=None
+                wrap=wrap,
+                data=data,
+                iterables_repeat_wrap=True,
+                closed_tags_for=None,
+                data_sorter=None,
             )
             node.serialize.assert_called_once_with(indenter)
 

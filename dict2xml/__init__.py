@@ -1,4 +1,4 @@
-from dict2xml.logic import Converter, Node
+from dict2xml.logic import Converter, DataSorter, Node
 
 from .version import VERSION
 
@@ -8,4 +8,4 @@ def dict2xml(data, *args, **kwargs):
     return Converter(*args, **kwargs).build(data)
 
 
-__all__ = ["dict2xml", "Converter", "Node", "VERSION"]
+__all__ = ["dict2xml", "Converter", "Node", "VERSION", "DataSorter"]
