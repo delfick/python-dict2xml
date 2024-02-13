@@ -137,6 +137,9 @@ Limitations
 Changelog
 ---------
 
+1.7.5 - 13 February 2024
+    * Introduced the ``data_sorter`` option
+
 1.7.4 - 16 January 2024
     * Make the tests compatible with pytest8
 
