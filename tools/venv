@@ -37,4 +37,5 @@ else:
     manager.add_requirements_file("{here}", "requirements.dev.txt")
     manager.add_env(NOSE_OF_YETI_BLACK_COMPAT="true")
 
+manager.set_packaging_version('">24"')
 manager.run()

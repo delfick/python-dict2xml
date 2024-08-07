@@ -1,11 +1,12 @@
-pylama-dmypy==0.4
+types-setuptools==69.1.0.20240309
 pylama==8.4.1
 neovim==0.3.1
-tox==4.4.6
-isort==5.11.5
-python-lsp-server==1.7.1
-pylsp-mypy==0.6.5
+tox==4.17.1
+python-lsp-server==1.10.0
+python-lsp-black==2.0.0
+mslex==1.1.0; sys.platform == 'win32'
+isort==5.13.2
 pyls-isort==0.2.2
-python-lsp-black==1.2.1
-hatch==1.6.3
-mslex==0.3.0; sys.platform == 'win32'
+hatch==1.9.3
+jedi==0.19.1
+setuptools>=69.0.3; python_version >= '3.12'
