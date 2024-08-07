@@ -7,7 +7,7 @@ from unittest import mock
 
 import pytest
 
-from dict2xml import Converter, dict2xml
+from dict2xml import Converter, DataSorter, dict2xml
 
 examples = os.path.join(os.path.dirname(__file__), "examples")
 
@@ -22,12 +22,26 @@ describe "Build":
             converter.build.return_value = serialized
 
             FakeConverter = mock.Mock(name="Converter", return_value=converter)
+            data_sorter = DataSorter.never()
 
             with mock.patch("dict2xml.Converter", FakeConverter):
-                assert dict2xml(data, 1, 2, 3, a=5, b=8) is serialized
+                assert (
+                    dict2xml(
+                        data,
+                        wrap="wrap",
+                        indent="indent",
+                        newlines=False,
+                        iterables_repeat_wrap=False,
+                        closed_tags_for=["one"],
+                        data_sorter=data_sorter,
+                    )
+                    is serialized
+                )
 
-            FakeConverter.assert_called_once_with(1, 2, 3, a=5, b=8)
-            converter.build.assert_called_once_with(data)
+            FakeConverter.assert_called_once_with(wrap="wrap", indent="indent", newlines=False)
+            converter.build.assert_called_once_with(
+                data, iterables_repeat_wrap=False, closed_tags_for=["one"], data_sorter=data_sorter
+            )
 
     describe "Just Working":
 

@@ -137,6 +137,10 @@ Limitations
 Changelog
 ---------
 
+1.7.6 - TBD
+    * Fixed the ``dict2xml.dict2xml`` entry point to distribute options
+      correctly
+
 1.7.5 - 13 February 2024
     * Introduced the ``data_sorter`` option
 
