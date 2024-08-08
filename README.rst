@@ -137,7 +137,7 @@ Limitations
 Changelog
 ---------
 
-1.7.6 - TBD
+1.7.6 - 8 August 2024
     * Fixed the ``dict2xml.dict2xml`` entry point to distribute options
       correctly
 
