@@ -137,6 +137,10 @@ Limitations
 Changelog
 ---------
 
+
+1.7.7 - TBD
+    * Converted the tests to plain python to remove the noseOfYeti dependency
+
 1.7.6 - 8 August 2024
     * Fixed the ``dict2xml.dict2xml`` entry point to distribute options
       correctly
@@ -199,9 +203,3 @@ Linting and formatting is via::
 
     > ./format
     > ./lint
-
-Python Black will work on the tests as long as ``NOSE_OF_YETI_BLACK_COMPAT=true``
-and the correct version of black is available. This is true if your editor
-is opened in the same terminal session after sourcing run.sh or if
-you make sure that environment variable is set and the editor is using the
-virtualenv made by running or sourcing ``run.sh`` (``tools/venv/.python``)

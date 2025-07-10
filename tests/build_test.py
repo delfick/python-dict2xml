@@ -1,5 +1,3 @@
-# coding: spec
-
 import json
 import os
 from textwrap import dedent
@@ -11,10 +9,12 @@ from dict2xml import Converter, DataSorter, dict2xml
 
 examples = os.path.join(os.path.dirname(__file__), "examples")
 
-describe "Build":
-    describe "Convenience Function":
 
-        it "Creates a Converter with *args and **kwargs and calls build on it with provided data":
+class TestBuild:
+    class TestConvenienceFunction:
+        def test_it_creates_a_converter_with_args_and_kwargs_and_calls_build_on_it_with_provided_data(
+            self,
+        ):
             data = mock.Mock(name="data")
             serialized = mock.Mock(name="serialized")
 
@@ -40,11 +40,13 @@ describe "Build":
 
             FakeConverter.assert_called_once_with(wrap="wrap", indent="indent", newlines=False)
             converter.build.assert_called_once_with(
-                data, iterables_repeat_wrap=False, closed_tags_for=["one"], data_sorter=data_sorter
+                data,
+                iterables_repeat_wrap=False,
+                closed_tags_for=["one"],
+                data_sorter=data_sorter,
             )
 
-    describe "Just Working":
-
+    class TestJustWorking:
         @pytest.fixture()
         def assertResult(self):
             def assertResult(result, **kwargs):
@@ -56,7 +58,7 @@ describe "Build":
 
             return assertResult
 
-        it "with both indentation and newlines", assertResult:
+        def test_with_both_indentation_and_newlines(self, assertResult):
             expected = """
                 <all>
                   <a>1</a>
@@ -73,7 +75,7 @@ describe "Build":
             """
             assertResult(expected, indent="  ", newlines=True)
 
-        it "with just newlines", assertResult:
+        def test_with_just_newlines(self, assertResult):
             expected = """
                 <all>
                 <a>1</a>
@@ -90,16 +92,16 @@ describe "Build":
             """
             assertResult(expected, indent=None, newlines=True)
 
-        it "with just indentation", assertResult:
+        def test_with_just_indentation(self, assertResult):
             # Indentation requires newlines to work
             expected = "<all><a>1</a><a>2</a><a>3</a><b><c>d</c><e><f>g</f></e></b><d>1</d></all>"
             assertResult(expected, indent="  ", newlines=False)
 
-        it "with no whitespace", assertResult:
+        def test_with_no_whitespace(self, assertResult):
             expected = "<all><a>1</a><a>2</a><a>3</a><b><c>d</c><e><f>g</f></e></b><d>1</d></all>"
             assertResult(expected, indent=None, newlines=False)
 
-        it "works on a massive, complex dictionary":
+        def test_works_on_a_massive_complex_dictionary(self):
             with open(os.path.join(examples, "python_dict.json"), "r") as fle:
                 data = json.load(fle)
 
