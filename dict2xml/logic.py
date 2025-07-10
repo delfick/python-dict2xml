@@ -5,17 +5,17 @@ import re
 start_ranges = "|".join(
     "[{0}]".format(r)
     for r in [
-        "\xC0-\xD6",
-        "\xD8-\xF6",
-        "\xF8-\u02FF",
-        "\u0370-\u037D",
-        "\u037F-\u1FFF",
-        "\u200C-\u200D",
-        "\u2070-\u218F",
-        "\u2C00-\u2FEF",
-        "\u3001-\uD7FF",
-        "\uF900-\uFDCF",
-        "\uFDF0-\uFFFD",
+        "\xc0-\xd6",
+        "\xd8-\xf6",
+        "\xf8-\u02ff",
+        "\u0370-\u037d",
+        "\u037f-\u1fff",
+        "\u200c-\u200d",
+        "\u2070-\u218f",
+        "\u2c00-\u2fef",
+        "\u3001-\ud7ff",
+        "\uf900-\ufdcf",
+        "\ufdf0-\ufffd",
     ]
 )
 
