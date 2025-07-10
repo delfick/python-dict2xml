@@ -24,7 +24,6 @@ classifiers = [
 
 [project.optional-dependencies]
 tests = [
-    "noseOfYeti[black]==2.4.9",
     "pytest==8.3.2",
 ]
 

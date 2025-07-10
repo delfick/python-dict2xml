@@ -35,7 +35,6 @@ if "TOX_PYTHON" in os.environ:
 else:
     manager.add_no_binary("black")
     manager.add_requirements_file("{here}", "requirements.dev.txt")
-    manager.add_env(NOSE_OF_YETI_BLACK_COMPAT="true")
 
 manager.set_packaging_version('">24"')
 manager.run()

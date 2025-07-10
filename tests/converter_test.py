@@ -1,5 +1,3 @@
-# coding: spec
-
 from textwrap import dedent
 from unittest import mock
 
@@ -7,10 +5,12 @@ import pytest
 
 from dict2xml import Converter
 
-describe "Converter":
-    describe "Building":
 
-        it "creates an indenter, a node, and then calls serialize on the node with the indenter":
+class TestConverter:
+    class TestBuilding:
+        def test_creates_an_indenter_a_node_and_then_calls_serialize_on_the_node_with_the_indenter(
+            self,
+        ):
             wrap = mock.Mock("wrap")
             indent = mock.Mock("indent")
             newlines = mock.Mock("newlines")
@@ -42,7 +42,7 @@ describe "Converter":
             )
             node.serialize.assert_called_once_with(indenter)
 
-        it "doesn't repeat the wrap if iterables_repeat_wrap is False":
+        def tes_does_not_repeat_the_wrap_of_iterables_repeat_wrap_is_false(self):
             example = {
                 "array": [
                     {"item": {"string1": "string", "string2": "string"}},
@@ -69,7 +69,7 @@ describe "Converter":
                 ).strip()
             )
 
-        it "can produce self closing tags":
+        def test_can_produce_self_closing_tags(self):
             example = {
                 "item1": None,
                 "item2": {"string1": "", "string2": None},
@@ -122,8 +122,7 @@ describe "Converter":
                 ).strip()
             )
 
-    describe "Making indentation function":
-
+    class TestMakingIndentationFunction:
         @pytest.fixture()
         def V(self):
             class V:
@@ -137,15 +136,15 @@ describe "Converter":
 
             return V()
 
-        describe "No newlines":
-            it "joins nodes with empty string", V:
+        class TestNoNewlines:
+            def test_joins_nodes_with_empty_string(self, V):
                 indenter = V.without_newlines._make_indenter()
                 assert indenter(["a", "b", "c"], True) == "abc"
                 assert indenter(["d", "e", "f"], False) == "def"
 
-        describe "With newlines":
-            describe "No indentation":
-                it "joins with newlines and never indents", V:
+        class TestWithNewlines:
+            class TestNoIndentation:
+                def test_joins_with_newlines_and_never_indents(self, V):
                     # Wrap is added to expected output via test_indenter
                     indenter = V.without_indent._make_indenter()
                     V.assertIndenter(
@@ -162,8 +161,8 @@ describe "Converter":
                         ),
                     )
 
-            describe "With indentation":
-                it "joins with newlines and indents if there is a wrapping tag", V:
+            class TestWithIndentation:
+                def test_joins_with_newlines_and_indents_if_there_is_a_wrapping_tag(self, V):
                     # Wrap is added to expected output via test_indenter
                     indenter = V.with_indent._make_indenter()
                     V.assertIndenter(
@@ -180,7 +179,7 @@ describe "Converter":
                         ),
                     )
 
-                it "joins with newlines but doesn't indent if no wrapping tag", V:
+                def test_joins_with_newlines_but_does_not_indent_if_no_wrapping_tag(self, V):
                     indenter = V.with_indent._make_indenter()
                     V.assertIndenter(
                         indenter,
@@ -194,7 +193,7 @@ describe "Converter":
                         ),
                     )
 
-                it "reindents each new line", V:
+                def test_it_reindents_each_new_line(self, V):
                     node1 = dedent(
                         """
                         a

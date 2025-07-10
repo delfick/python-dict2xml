@@ -25,7 +25,7 @@ class Command:
     __is_command__: bool
 
     def __call__(self, bin_dir: Path, args: List[str]) -> None:
-        ...
+        pass
 
 
 def command(func: tp.Callable) -> tp.Callable:
@@ -52,9 +52,9 @@ class App:
         for name in dir(self):
             val = getattr(self, name)
             if getattr(val, "__is_command__", False):
-                assert (
-                    inspect.signature(val) == compare
-                ), f"Expected '{name}' to have correct signature, have {inspect.signature(val)} instead of {compare}"
+                assert inspect.signature(val) == compare, (
+                    f"Expected '{name}' to have correct signature, have {inspect.signature(val)} instead of {compare}"
+                )
                 self.commands[name] = val
 
     def __call__(self, args: List[str]) -> None:
@@ -65,7 +65,9 @@ class App:
             self.commands[args[0]](bin_dir, args[1:])
             return
 
-        sys.exit(f"Unknown command:\nAvailable: {sorted(self.commands)}\nWanted: {args}")
+        sys.exit(
+            f"Unknown command:\nAvailable: {sorted(self.commands)}\nWanted: {args}"
+        )
 
     @command
     def format(self, bin_dir: Path, args: List[str]) -> None:
@@ -84,7 +86,6 @@ class App:
             args = ["-q", *args]
 
         env = os.environ
-        env["NOSE_OF_YETI_BLACK_COMPAT"] = "false"
 
         files: list[str] = []
         if "TESTS_CHDIR" in env:
