@@ -138,7 +138,7 @@ Changelog
 ---------
 
 
-1.7.7 - TBD
+1.7.7 - 10 July 2025
     * Converted the tests to plain python to remove the noseOfYeti dependency
 
 1.7.6 - 8 August 2024
