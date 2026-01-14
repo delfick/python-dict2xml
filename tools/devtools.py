@@ -119,6 +119,10 @@ class App:
     def tox(self, bin_dir: Path, args: List[str]) -> None:
         run(bin_dir / "tox", *args)
 
+    @command
+    def types(self, bin_dir: Path, args: List[str]) -> None:
+        run(bin_dir / "mypy", ".", *args)
+
 
 app = App()
 

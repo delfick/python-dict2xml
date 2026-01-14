@@ -10,3 +10,4 @@ pyls-isort==0.2.2
 hatch==1.9.3
 jedi==0.19.1
 setuptools>=69.0.3; python_version >= '3.12'
+mypy==1.19.1
