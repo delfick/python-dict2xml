@@ -24,6 +24,25 @@ jobs:
       - name: Ensure linter is happy
         run: ./lint
 
+  types:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        shell: bash
+        env:
+          VENVSTARTER_ONLY_MAKE_VENV: "1"
+        run: python ./tools/venv
+
+      - name: Ensure mypy is happy
+        run: ./types
+
   format:
     runs-on: ubuntu-latest
     steps:

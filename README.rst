@@ -137,6 +137,8 @@ Limitations
 Changelog
 ---------
 
+1.7.8 - TBD
+    * Added some .pyi files
 
 1.7.7 - 10 July 2025
     * Converted the tests to plain python to remove the noseOfYeti dependency
