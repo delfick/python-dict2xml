@@ -137,7 +137,7 @@ Limitations
 Changelog
 ---------
 
-1.7.8 - TBD
+1.7.8 - 15 January 2026
     * Added some .pyi files
 
 1.7.7 - 10 July 2025
