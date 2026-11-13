@@ -275,8 +275,9 @@ class Converter(object):
                     and indent each line in the child by one indent unit
                 """
                 if wrapped:
-                    seperator = "\n{0}".format(indent)
-                    surrounding = "\n{0}{{0}}\n".format(indent)
+                    safe_indent = indent.replace("{", "{{").replace("}", "}}")
+                    seperator = "\n{0}".format(safe_indent)
+                    surrounding = "\n{0}{{0}}\n".format(safe_indent)
                 else:
                     seperator = "\n"
                     surrounding = "{0}"
